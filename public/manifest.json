@@ -1,0 +1,13 @@
+{
+  "name": "La Catedral del Pisco",
+  "short_name": "Catedral Pisco",
+  "description": "Carta digital — La Catedral del Pisco. Cocina Peruana en Buenos Aires.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E1E1C",
+  "theme_color": "#0E1E1C",
+  "icons": [
+    { "src": "/icons/icon-192.svg", "type": "image/svg+xml", "sizes": "192x192" },
+    { "src": "/icons/icon-512.svg", "type": "image/svg+xml", "sizes": "512x512" }
+  ]
+}
