@@ -33,7 +33,8 @@ const COPY = {
 }
 
 function ProtectedRoute({ role, children }) {
-  const { user } = useContext(LanguageContext)
+  const { user, authLoading } = useContext(LanguageContext)
+  if (authLoading) return null // Esperar a que se resuelva la sesión
   const userRole = user ? getUserRole(user) : null
   if (!user || userRole !== role) return <Navigate to="/" replace />
   return children
@@ -179,7 +180,8 @@ function MenuPage() {
 }
 
 function LoginRoute() {
-  const { user } = useContext(LanguageContext)
+  const { user, authLoading } = useContext(LanguageContext)
+  if (authLoading) return null // Esperar a que se resuelva la sesión
   if (user) {
     const role = getUserRole(user)
     if (role === 'admin') return <Navigate to="/admin" replace />
@@ -191,15 +193,20 @@ function LoginRoute() {
 export default function App() {
   const [locale, setLocale] = useState('es')
   const [user, setUser] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [branches, setBranches] = useState([])
   const [branchesLoading, setBranchesLoading] = useState(true)
 
   useEffect(() => {
     const sub = onAuthChange((u) => {
       setUser(u)
+      setAuthLoading(false)
       if (!u) invalidateCache()
     })
-    getUser().then(({ data }) => setUser(data?.user || null))
+    getUser().then(({ data }) => {
+      setUser(data?.user || null)
+      setAuthLoading(false)
+    })
     return () => sub?.unsubscribe?.()
   }, [])
 
@@ -221,7 +228,7 @@ export default function App() {
     return () => { cancelled = true }
   }, [])
 
-  const ctx = { locale, setLocale, user, setUser, branches, branchesLoading }
+  const ctx = { locale, setLocale, user, setUser, authLoading, branches, branchesLoading }
 
   return (
     <LanguageContext.Provider value={ctx}>
