@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useParams, useNavigate } from '
 import Header from './components/Header'
 import FooterWatermark from './components/FooterWatermark'
 import CategoryBanner from './components/CategoryBanner'
+import CategoryNav, { useCategoryScrollSpy } from './components/CategoryNav'
 import BranchSwitcher from './components/BranchSwitcher'
 import MenuActions from './components/MenuActions'
 import ChatWidget from './components/ChatWidget'
@@ -42,8 +43,8 @@ function ProtectedRoute({ role, children }) {
 
 function FullScreenMessage({ children }) {
   return (
-    <div style={styles.loading}>
-      <span style={styles.loadingText}>{children}</span>
+    <div className="screen-message">
+      <span className="screen-message__text">{children}</span>
     </div>
   )
 }
@@ -95,21 +96,55 @@ function MenuPage() {
     })()
   }, [branchSlug])
 
-  // La primera categoría arranca abierta: si están todas cerradas, el cliente
-  // escanea el QR y no ve un solo plato hasta que toca algo.
+  // Todas cerradas al entrar: el comensal escanea el QR y lo primero que ve es
+  // la carta entera de un vistazo, para elegir por dónde entrar. Con una
+  // categoría ya abierta aterrizaba dentro de Entradas y las otras ocho
+  // quedaban empujadas fuera de pantalla.
+  // Se resetea al cambiar de sucursal, que es cuando cambia `categories`.
   useEffect(() => {
-    const first = categories?.[0]
-    setOpenIds(first ? new Set([String(first.id)]) : new Set())
+    setOpenIds(new Set())
   }, [categories])
 
+  /**
+   * Abre una categoría y la deja anclada bajo el header + la nav.
+   *
+   * Si había otra abierta MÁS ARRIBA, al cerrarse todo lo de abajo sube y la
+   * sección se escapa. Por eso esperamos a que termine el cierre (450ms, el
+   * mismo tiempo que la transición del panel) antes de anclar: si scrolleamos
+   * antes, el scroll suave pelea contra la animación de colapso.
+   * Si no había ninguna abierta no hay nada que esperar, y medio segundo de
+   * demora se sentiría como que la app no responde.
+   */
+  const revealCategory = useCallback((id) => {
+    const waitForClose = openIds.size > 0 && !openIds.has(id)
+    setOpenIds(new Set([id]))
+
+    window.setTimeout(() => {
+      const section = document.getElementById(`category-${id}`)
+      if (!section) return
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      section.scrollIntoView({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+        block: 'start',
+      })
+    }, waitForClose ? 460 : 0)
+  }, [openIds])
+
+  // El banner alterna: si tocás la que ya está abierta, se cierra y volvés a
+  // ver la carta completa.
   const toggleCategory = useCallback((id) => {
-    setOpenIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }, [])
+    if (openIds.has(id)) {
+      setOpenIds(new Set())
+      return
+    }
+    revealCategory(id)
+  }, [openIds, revealCategory])
+
+  // La nav NO alterna: tocar una pill siempre abre y lleva a esa sección.
+  // Si alternara, tocar la categoría en la que ya estás la cerraría, que es
+  // exactamente lo contrario de lo que espera alguien que usa una barra de
+  // navegación.
+  const activeCategoryId = useCategoryScrollSpy(categories)
 
   // Solo se recuerda una sucursal que la base confirmó como existente.
   useEffect(() => {
@@ -132,9 +167,9 @@ function MenuPage() {
   // en silencio: mostrar la carta de otra sucursal sería peor que avisar.
   if (!branch && branches?.length > 0) {
     return (
-      <div style={styles.unknownBranch}>
-        <p style={styles.unknownBranchText}>{t(COPY.unknownBranch)}</p>
-        <ul style={styles.unknownBranchList}>
+      <div className="branch-fallback">
+        <p className="branch-fallback__text">{t(COPY.unknownBranch)}</p>
+        <ul className="branch-fallback__list">
           {branches.map((option) => (
             <li key={option.slug}>
               <button
@@ -158,19 +193,32 @@ function MenuPage() {
         branches={branches}
         currentSlug={branch?.slug || branchSlug}
       />
-      <main style={styles.main}>
-        {categories?.map((cat) => (
-          <CategoryBanner
-            key={cat.id}
-            category={cat}
-            onDishClick={setSelectedDish}
-            open={openIds.has(String(cat.id))}
-            onToggle={() => toggleCategory(String(cat.id))}
-          />
-        ))}
-        <MenuActions />
-        <FooterWatermark />
-      </main>
+      {/* La nav y la carta son hermanas dentro de un mismo contenedor para que
+          en escritorio puedan ser las dos columnas de una grilla. En mobile
+          `.menu-layout` es un bloque común y no cambia nada: la nav queda
+          pegada arriba y la carta debajo.
+          Va después del BranchSwitcher porque la etiqueta de sucursal es parte
+          del encabezado y se va con el scroll; la nav se queda. */}
+      <div className="menu-layout">
+        <CategoryNav
+          categories={categories}
+          activeId={activeCategoryId}
+          onSelect={revealCategory}
+        />
+        <main className="menu-main">
+          {categories?.map((cat) => (
+            <CategoryBanner
+              key={cat.id}
+              category={cat}
+              onDishClick={setSelectedDish}
+              open={openIds.has(String(cat.id))}
+              onToggle={() => toggleCategory(String(cat.id))}
+            />
+          ))}
+          <MenuActions />
+          <FooterWatermark />
+        </main>
+      </div>
       <ChatWidget branchSlug={branchSlug} />
       {selectedDish && (
         <DishDetail dish={selectedDish} onClose={() => setSelectedDish(null)} />
@@ -248,34 +296,4 @@ export default function App() {
       </BrowserRouter>
     </LanguageContext.Provider>
   )
-}
-
-const styles = {
-  main: {
-    flex: '0 0 auto',
-    height: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
-    paddingBottom: 0,
-  },
-  loading: {
-    height: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-    padding: '24px', background: 'var(--bg-primary)',
-  },
-  loadingText: {
-    color: 'var(--accent-gold)', fontSize: '14px', textAlign: 'center',
-    fontFamily: 'var(--font-sans)', lineHeight: 1.5,
-  },
-  unknownBranch: {
-    minHeight: '100dvh', display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'center', gap: '18px',
-    padding: '24px', background: 'var(--bg-primary)',
-  },
-  unknownBranchText: {
-    color: 'var(--text-secondary)', fontSize: '15px', textAlign: 'center',
-    fontFamily: 'var(--font-sans)', lineHeight: 1.5, maxWidth: '340px',
-  },
-  unknownBranchList: {
-    listStyle: 'none', width: '100%', maxWidth: '340px', padding: 0, margin: 0,
-  },
 }

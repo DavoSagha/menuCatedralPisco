@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect, useCallback } from 'react'
+import { useState, useContext, useRef, useEffect } from 'react'
 import { LanguageContext } from '../App'
 import DishCard from './DishCard'
 import Icon from './Icon'
@@ -11,9 +11,8 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
   const { locale } = useContext(LanguageContext)
   const [animating, setAnimating] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
-  const [hovered, setHovered] = useState(false)
-  const [pressed, setPressed] = useState(false)
   const contentRef = useRef(null)
+  const innerRef = useRef(null)
   const isFirstRender = useRef(true)
 
   const t = (obj) => obj[locale] || obj.es
@@ -36,6 +35,15 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
 
   const shouldRenderItems = open || animating
 
+  /**
+   * Mide el alto real del contenido para animar el despliegue.
+   *
+   * El observer va sobre el CONTENIDO, no sobre el panel. El panel tiene el
+   * alto clavado por `maxHeight`, así que su caja nunca cambia y el
+   * ResizeObserver no dispararía: al cruzar el breakpoint de escritorio los
+   * platos pasan a dos columnas, el contenido se achica a la mitad, y una
+   * categoría abierta se quedaba con el hueco de la medición vieja.
+   */
   useEffect(() => {
     if (!shouldRenderItems || !contentRef.current) return
 
@@ -48,17 +56,26 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
       ? new ResizeObserver(measure)
       : null
 
-    observer?.observe(contentRef.current)
+    if (innerRef.current) observer?.observe(innerRef.current)
+
+    // Respaldo para lo que el observer no ve: cambio de orientación y el
+    // reflow que provoca la fuente cuando termina de descargarse.
+    window.addEventListener('resize', measure)
 
     return () => {
       cancelAnimationFrame(frame)
       observer?.disconnect()
+      window.removeEventListener('resize', measure)
     }
   }, [shouldRenderItems, open, locale])
 
   const hasSubcategories = category.subcategories && category.subcategories.length > 0
   const subItems = (sub) => sub.items || sub.dishes || []
   const bgImage = category.image ? `url(${category.image})` : undefined
+
+  const dishCount = hasSubcategories
+    ? category.subcategories.reduce((total, sub) => total + subItems(sub).length, 0)
+    : (category.dishes || category.items || []).length
 
   const selectDish = (dish, subcategory = null) => {
     onDishClick?.({
@@ -76,41 +93,26 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
     <section
       id={`category-${category.id}`}
       className={`category-section${open ? ' is-open' : ''}`}
-      style={styles.wrapper}
     >
+      {/* `:hover` y `:active` los resuelve el navegador. Antes esto eran dos
+          `useState` y cinco handlers de puntero para pintar un brillo. */}
       <button
         type="button"
         onClick={handleToggle}
-        className="category-banner-trigger"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => { setHovered(false); setPressed(false) }}
-        onPointerDown={() => setPressed(true)}
-        onPointerUp={() => setPressed(false)}
-        onPointerCancel={() => setPressed(false)}
-        style={{
-          ...styles.banner,
-          ...(bgImage ? { backgroundImage: bgImage } : {}),
-          ...(hovered && !pressed ? styles.bannerHover : {}),
-          ...(pressed ? styles.bannerActive : {}),
-        }}
+        className={`category-banner-trigger${bgImage ? '' : ' category-banner-trigger--no-image'}`}
+        style={bgImage ? { backgroundImage: bgImage } : undefined}
         aria-expanded={open}
         aria-controls={panelId}
       >
-        <div style={styles.overlay} />
-        {/* Línea dorada inferior que aparece en hover/open */}
-        <div style={{
-          ...styles.goldLine,
-          opacity: (hovered || open) ? 1 : 0,
-          transform: (hovered || open) ? 'scaleX(1)' : 'scaleX(0)',
-        }} />
-        <div style={styles.content}>
-          <span style={styles.label}>{t(category.name)}</span>
-          <span
-            style={{
-              ...styles.arrowBox,
-              transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
-          >
+        <div className="category-banner__overlay" />
+        <div className="category-banner__arch" />
+        <div className="category-banner__rule" />
+        <div className="category-banner__content">
+          <span className="category-banner__label">{t(category.name)}</span>
+          {dishCount > 0 && (
+            <span className="category-banner__count">{dishCount}</span>
+          )}
+          <span className="category-banner__chevron">
             <Icon name="chevronDown" size={18} strokeWidth={2} />
           </span>
         </div>
@@ -119,39 +121,45 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
       <div
         id={panelId}
         ref={contentRef}
-        style={{
-          ...styles.dishesContainer,
-          maxHeight: open ? `${contentHeight}px` : '0px',
-          opacity: open ? 1 : 0,
-          pointerEvents: open ? 'auto' : 'none',
-          transition: open
-            ? 'max-height 0.45s ease, opacity 0.35s ease'
-            : 'max-height 0.35s ease, opacity 0.25s ease',
-        }}
+        className="category-banner__panel"
+        /* Lo único que queda inline es la altura medida: es un dato, no un
+           estilo. Opacidad, pointer-events y transición los deriva el CSS
+           de `.is-open`. */
+        style={{ maxHeight: open ? `${contentHeight}px` : '0px' }}
       >
         {shouldRenderItems && (
-          <div style={styles.dishesInner} aria-hidden={!open}>
+          <div className="category-banner__panel-inner" ref={innerRef} aria-hidden={!open}>
+            {/* Los platos van envueltos en `.dish-grid` en los dos casos, con
+                subcategorías y sin ellas. Es el gancho para que en escritorio
+                pasen a dos columnas sin que el encabezado de subcategoría
+                quede convertido en una celda más de la grilla. */}
             {hasSubcategories
               ? category.subcategories.map((sub, idx) => (
-                  <div key={sub.id || idx}>
-                    <div style={styles.subHeader}>
-                      <span style={styles.subName}>{t(sub.name)}</span>
+                  <div className="subcategory-group" key={sub.id || idx}>
+                    <div className="subcategory-head">
+                      <span className="subcategory-head__name">{t(sub.name)}</span>
                       {sub.description && t(sub.description) && (
-                        <p style={styles.subDesc}>{t(sub.description)}</p>
+                        <p className="subcategory-head__desc">{t(sub.description)}</p>
                       )}
                     </div>
-                    {subItems(sub).map((dish) => (
-                      <DishCard
-                        key={dish.id}
-                        dish={dish}
-                        onClick={(selectedDish) => selectDish(selectedDish, sub)}
-                      />
-                    ))}
+                    <div className="dish-grid">
+                      {subItems(sub).map((dish) => (
+                        <DishCard
+                          key={dish.id}
+                          dish={dish}
+                          onClick={(selectedDish) => selectDish(selectedDish, sub)}
+                        />
+                      ))}
+                    </div>
                   </div>
                 ))
-              : (category.dishes || category.items || []).map((dish) => (
-                  <DishCard key={dish.id} dish={dish} onClick={selectDish} />
-                ))}
+              : (
+                  <div className="dish-grid">
+                    {(category.dishes || category.items || []).map((dish) => (
+                      <DishCard key={dish.id} dish={dish} onClick={selectDish} />
+                    ))}
+                  </div>
+                )}
           </div>
         )}
       </div>
@@ -159,114 +167,3 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
   )
 }
 
-const styles = {
-  wrapper: {
-    /* Separación entre banners: el fondo oscuro queda visible entre cards */
-    margin: '0 10px 8px',
-    padding: 0,
-    height: 'auto',
-    overflow: 'hidden',
-    borderRadius: '12px',
-    border: '1px solid rgba(212, 175, 55, 0.10)',
-    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.35)',
-    outline: 'none',
-  },
-  banner: {
-    width: '100%',
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '28px 20px',
-    border: 'none',
-    background: `var(--bg-banner) no-repeat center / cover`,
-    color: 'var(--text-primary)',
-    cursor: 'pointer',
-    textAlign: 'left',
-    fontFamily: 'var(--font-sans)',
-    minHeight: '112px',
-    outline: 'none',
-    transition: 'filter 0.25s ease, transform 0.2s ease',
-  },
-  bannerHover: {
-    filter: 'brightness(1.08)',
-  },
-  bannerActive: {
-    filter: 'brightness(0.92)',
-    transform: 'scale(0.995)',
-  },
-  overlay: {
-    position: 'absolute',
-    inset: 0,
-    /* Gradiente diagonal: oscuro abajo-izquierda, semitransparente arriba-derecha */
-    background: 'linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.40) 55%, rgba(0,0,0,0.55) 100%)',
-    zIndex: 1,
-  },
-  goldLine: {
-    position: 'absolute',
-    bottom: 0,
-    left: '5%',
-    right: '5%',
-    height: '2px',
-    borderRadius: '2px',
-    background: 'linear-gradient(90deg, transparent, var(--accent-gold), transparent)',
-    zIndex: 3,
-    transformOrigin: 'center',
-    transition: 'opacity 0.3s ease, transform 0.35s ease',
-  },
-  content: {
-    position: 'relative',
-    zIndex: 2,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    width: '100%',
-  },
-  label: {
-    fontFamily: 'var(--font-display)',
-    fontSize: '26px',
-    fontWeight: 700,
-    letterSpacing: '0.12em',
-    flex: 1,
-    textTransform: 'uppercase',
-    textShadow: '0 2px 12px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.9)',
-  },
-  arrowBox: {
-    width: '38px',
-    height: '38px',
-    borderRadius: '50%',
-    background: 'rgba(212,175,55,0.12)',
-    border: '1px solid var(--accent-gold)',
-    color: 'var(--accent-gold)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'transform 0.35s ease, background 0.2s',
-    flexShrink: 0,
-  },
-  dishesContainer: {
-    overflow: 'hidden',
-    background: 'var(--bg-primary)',
-    borderTop: '1px solid rgba(212, 175, 55, 0.08)',
-  },
-  dishesInner: {
-    padding: '16px 14px 12px',
-  },
-  subHeader: {
-    padding: '18px 2px 10px',
-  },
-  subName: {
-    fontFamily: 'var(--font-heading)',
-    fontSize: '15px',
-    fontWeight: 600,
-    color: 'var(--accent-gold)',
-    letterSpacing: '0.16em',
-    textTransform: 'uppercase',
-  },
-  subDesc: {
-    fontFamily: 'var(--font-sans)',
-    fontSize: '13px',
-    color: 'var(--text-muted)',
-    marginTop: '6px',
-    lineHeight: 1.5,
-  },
-}

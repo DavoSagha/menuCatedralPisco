@@ -4,7 +4,7 @@ import { LanguageContext } from '../App'
 /**
  * Barra de categorías sticky con scroll-spy.
  *
- * Deliberadamente delgada (52px) y sin sombra pesada: las barras sticky
+ * Deliberadamente delgada (56px) y sin sombra pesada: las barras sticky
  * gruesas rompen al hacer zoom y se comen la pantalla en mobile, sobre todo
  * con el teclado virtual abierto.
  */
@@ -103,5 +103,11 @@ export function useCategoryScrollSpy(categories) {
   return activeId
 }
 
-/** Alto del header (80px) + alto de la nav (52px). */
-export const HEADER_OFFSET = 132
+/**
+ * Alto del header (80px) + alto de la nav (56px).
+ *
+ * La nav quedó en 56 y no en 52 para que las pills lleguen a los 44px de touch
+ * target que usa el resto de la app. Si se toca este número, hay que tocar
+ * también `scroll-margin-top` en `.category-section`.
+ */
+export const HEADER_OFFSET = 136
