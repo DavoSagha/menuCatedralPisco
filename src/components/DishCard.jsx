@@ -36,8 +36,7 @@ export default function DishCard({ dish, onClick }) {
 
   return (
     <div
-      className="dish-card-interactive"
-      style={{ ...styles.card, ...(unavailable ? styles.cardUnavailable : {}) }}
+      className={`dish-card${unavailable ? ' is-unavailable' : ''}`}
       onClick={activate}
       onKeyDown={handleKeyDown}
       role="button"
@@ -45,33 +44,33 @@ export default function DishCard({ dish, onClick }) {
       aria-label={`${dishName}, ${price}${unavailable ? `, ${unavailableLabel}` : ''}`}
     >
       {hasImage && (
-        <div style={styles.thumbWrap}>
+        <div className="dish-card__thumb-wrap">
           <img
+            className="dish-card__thumb"
             src={dish.image}
             alt={dishName}
-            style={{ ...styles.thumb, ...(unavailable ? styles.thumbUnavailable : {}) }}
             loading="lazy"
             decoding="async"
           />
         </div>
       )}
-      <div style={styles.cardBody}>
-        <div style={styles.nameRow}>
-          <h3 style={styles.name}>{dishName}</h3>
-          <span style={styles.price}>{price}</span>
+      <div className="dish-card__body">
+        <div className="dish-card__name-row">
+          <h3 className="dish-card__name">{dishName}</h3>
+          <span className="dish-card__price">{price}</span>
         </div>
 
-        {t(dish.description) && <p style={styles.desc}>{t(dish.description)}</p>}
+        {t(dish.description) && (
+          <p className="dish-card__desc">{t(dish.description)}</p>
+        )}
 
         {(unavailable || dish.diet_tags?.length > 0) && (
-          <div style={styles.tagsRow}>
+          <div className="dish-card__tags">
             {unavailable && (
-              <span style={{ ...styles.chip, ...styles.unavailableChip }}>
-                {unavailableLabel}
-              </span>
+              <span className="chip chip--unavailable">{unavailableLabel}</span>
             )}
             {dish.diet_tags?.map((tag) => (
-              <span key={tag} style={styles.chip}>
+              <span key={tag} className="chip">
                 {labelFor(DIET_LABELS, tag, locale)}
               </span>
             ))}
@@ -80,69 +79,4 @@ export default function DishCard({ dish, onClick }) {
       </div>
     </div>
   )
-}
-
-const styles = {
-  card: {
-    display: 'flex',
-    gap: '14px',
-    background: 'var(--card-bg)',
-    borderRadius: '10px',
-    border: '1px solid var(--card-border)',
-    marginBottom: '12px',
-    padding: '14px',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  },
-  cardUnavailable: {
-    borderColor: 'rgba(231, 76, 60, 0.42)',
-  },
-  thumbWrap: {
-    width: '96px', minWidth: '96px', height: '96px',
-    overflow: 'hidden', flexShrink: 0, alignSelf: 'flex-start',
-    borderRadius: '8px',
-  },
-  thumb: {
-    width: '100%', height: '100%', objectFit: 'cover', display: 'block',
-  },
-  thumbUnavailable: {
-    filter: 'saturate(0.55)',
-    opacity: 0.78,
-  },
-  cardBody: {
-    flex: 1, minWidth: 0,
-    display: 'flex', flexDirection: 'column', justifyContent: 'center',
-  },
-  nameRow: {
-    display: 'flex', justifyContent: 'space-between', alignItems: 'baseline',
-    marginBottom: '6px', gap: '12px',
-  },
-  name: {
-    fontFamily: 'var(--font-serif)', fontSize: '17px', fontWeight: 600,
-    color: 'var(--text-primary)', flex: 1, lineHeight: 1.25,
-  },
-  price: {
-    fontFamily: 'var(--font-sans)', fontSize: '16px', fontWeight: 600,
-    color: 'var(--accent-gold)', whiteSpace: 'nowrap',
-  },
-  desc: {
-    fontFamily: 'var(--font-sans)', fontSize: '14px',
-    color: 'var(--text-secondary)', lineHeight: 1.55,
-  },
-  tagsRow: {
-    display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '10px',
-  },
-  /* Chip de contorno: marca sin gritar, y no compite con el precio. */
-  chip: {
-    display: 'inline-block', padding: '3px 10px', borderRadius: '999px',
-    border: '1px solid rgba(239, 159, 39, 0.42)',
-    color: 'var(--accent-gold)', background: 'transparent',
-    fontFamily: 'var(--font-sans)', fontSize: '11px', fontWeight: 500,
-    letterSpacing: '0.04em', lineHeight: '17px', whiteSpace: 'nowrap',
-  },
-  unavailableChip: {
-    borderColor: 'rgba(231, 76, 60, 0.55)',
-    color: '#f08a7e',
-  },
 }

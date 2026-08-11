@@ -19,10 +19,32 @@
   --card-border: #243D39;
   --danger: #e74c3c;
   --success: #27ae60;
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-heading: 'Cinzel', Georgia, serif;
+  /* --------------------------------------------------------------------
+     Dos familias con roles claros: la serif pone la voz, la sans hace que
+     todo se lea. Los nombres de variable se conservan para no romper
+     `admin.css`, pero lo que apuntan cambió.
+
+     --font-display  Cormorant  Nombres de categoría y de plato en ficha.
+                                clamp(18-26px) y clamp(25-34px).
+     --font-serif    Cormorant  Nombres de plato y títulos. 16px y más.
+     --font-heading  Inter      Etiquetas diminutas en mayúscula: 10, 11,
+                                12, 13 y 15px. Ver la nota de abajo.
+     --font-sans     Inter      Todo el texto corrido, precios y controles.
+
+     Por qué --font-heading NO es Cormorant, que sería lo esperable:
+     esa variable se usa SOLO entre 10px y 15px, siempre en mayúsculas con
+     mucho tracking (eyebrows tipo "ENTRADAS CLÁSICAS", "ALÉRGENOS", las
+     pills de la nav). Cinzel, que estaba antes, es una tipografía de
+     capitales inscripcionales: hace exactamente ese trabajo. Cormorant es
+     una serif de alto contraste con astas finas, y a 10px sobre fondo
+     oscuro se desvanece — y esta carta se lee con luz baja, en un
+     restaurante. Inter a 600 se mantiene nítida a cualquier tamaño y ya
+     está descargada: cero bytes extra.
+     -------------------------------------------------------------------- */
   --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 html {
@@ -196,8 +218,78 @@ body.no-scroll {
   }
 }
 
+/* ---- Nav de categorías ---- */
+/* Se pega justo debajo del header (80px) y queda a la vista todo el scroll:
+   con las nueve categorías cerradas, es la única forma de saltar a una sección
+   sin recorrer los nueve banners con el pulgar. */
+.category-nav {
+  position: sticky;
+  top: 80px;
+  z-index: 90;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--bg-secondary);
+}
+
+.category-nav__list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 56px;
+  padding: 0 12px;
+  margin: 0;
+  list-style: none;
+  overflow-x: auto;
+  /* Sin esto, llegar al final de las pills arrastra la página entera. */
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.category-nav__list::-webkit-scrollbar {
+  display: none;
+}
+
+.category-nav__pill {
+  display: flex;
+  align-items: center;
+  /* 44px como el resto de los controles de la app: es el mínimo de touch
+     target, y esta barra se usa con el pulgar mientras se camina la carta. */
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.category-nav__pill:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.category-nav__pill.is-active {
+  border-color: var(--accent-gold);
+  background: rgba(212, 175, 55, 0.14);
+  color: var(--accent-gold);
+}
+
+.category-nav__pill:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
 .category-section {
-  scroll-margin-top: 88px; /* un poco más de margen para que el banner no quede bajo la nav */
+  /* header 80 + nav 56 + 8 de aire. Si cambia el alto de la nav hay que tocar
+     también HEADER_OFFSET en CategoryNav.jsx, que es de donde sale la línea
+     de lectura del scroll-spy. */
+  scroll-margin-top: 144px;
   height: auto;
   outline: none;
 }
@@ -217,6 +309,590 @@ body.no-scroll {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+/* ---- Shell de la app y estados de pantalla completa ---- */
+.menu-main {
+  flex: 0 0 auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0;
+}
+
+.screen-message {
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--bg-primary);
+}
+
+.screen-message__text {
+  color: var(--accent-gold);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.branch-fallback {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+  background: var(--bg-primary);
+}
+
+.branch-fallback__text {
+  max-width: 340px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.branch-fallback__list {
+  width: 100%;
+  max-width: 340px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ---- Header ---- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  height: 80px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--bg-secondary);
+}
+
+.site-header__spacer {
+  flex: 1;
+  min-width: 0;
+}
+
+/* max-width + shrink: con los botones a 44px, en pantallas de 360px el logo
+   y los controles se peleaban el ancho. Así el logo cede y nada se rompe. */
+.site-header__logo {
+  height: 85%;
+  width: auto;
+  max-width: 55%;
+  min-width: 0;
+  flex-shrink: 1;
+  display: block;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.site-header__actions {
+  flex: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* 44x44: mínimo de touch target recomendado para menús en mobile. */
+.header-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.lang-menu {
+  position: relative;
+}
+
+.lang-menu__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 6px;
+  height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+/* La transición ya estaba declarada en los estilos inline, pero nunca hubo un
+   estado que la disparara: con `style` no se puede escribir `:hover`. */
+.header-btn:hover,
+.lang-menu__trigger:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.header-btn:focus-visible,
+.lang-menu__trigger:focus-visible,
+.lang-menu__option:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.lang-menu__code {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.lang-menu__chevron {
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+}
+
+.lang-menu__trigger[aria-expanded='true'] .lang-menu__chevron {
+  transform: rotate(180deg);
+}
+
+.lang-menu__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 200;
+  min-width: 140px;
+  list-style: none;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.15s ease;
+}
+
+.lang-menu__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lang-menu__option:hover {
+  background: rgba(212, 175, 55, 0.10);
+  color: var(--text-primary);
+}
+
+.lang-menu__option[aria-selected='true'] {
+  background: var(--accent-gold-dim);
+  color: #fff;
+}
+
+/* Opacidad en vez de color fijo: así sigue legible sobre el ámbar del item activo. */
+.lang-menu__option-code {
+  min-width: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+
+/* ---- Banner de categoría ---- */
+.category-section {
+  /* Separación entre banners: el fondo oscuro queda visible entre cards */
+  margin: 0 10px 8px;
+  padding: 0;
+  border: 1px solid rgba(212, 175, 55, 0.10);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.category-banner-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 112px;
+  /* 24px y no 28: con `min-height` + `align-items: center` el padding solo
+     entra en juego cuando el texto desborda, así que bajarlo no cambia nada
+     visualmente pero le da aire al peor caso de dos renglones. */
+  padding: 24px 20px;
+  border: none;
+  background: var(--bg-banner) no-repeat center / cover;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: filter 0.25s ease, transform 0.2s ease;
+}
+
+/* Antes esto vivía en dos `useState` y costaba tres re-renders de React
+   por cada hover. El navegador lo resuelve solo. */
+.category-banner-trigger:hover {
+  filter: brightness(1.08);
+}
+
+.category-banner-trigger:active {
+  filter: brightness(0.92);
+  transform: scale(0.995);
+}
+
+.category-banner__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  /* Gradiente diagonal: oscuro abajo-izquierda, semitransparente arriba-derecha */
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.40) 55%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+/* --------------------------------------------------------------------------
+   Categoría sin foto.
+
+   Ese overlay de arriba existe para oscurecer una fotografía y que el texto
+   blanco se lea encima. Sin foto estaba tirando un velo negro al 72% sobre un
+   color plano: por eso los banners se veían apagados y sucios, no vacíos.
+
+   Acá se trata el banner como un NICHO: luz cayendo desde arriba, sombra hacia
+   el piso. Es lo que hace que la ausencia de foto se lea como decisión y no
+   como que falta algo.
+   -------------------------------------------------------------------------- */
+.category-banner-trigger--no-image {
+  background:
+    radial-gradient(130% 100% at 50% -10%, rgba(212, 175, 55, 0.13) 0%, rgba(212, 175, 55, 0) 62%),
+    linear-gradient(180deg, #1D4640 0%, var(--bg-banner) 45%, #102A26 100%);
+}
+
+.category-banner-trigger--no-image .category-banner__overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.30) 100%);
+}
+
+/* --------------------------------------------------------------------------
+   El arco.
+
+   Va DETRÁS del texto (z-index 1, el contenido está en 2) y a opacidad baja,
+   a propósito. Un arco de filete dorado rodeando la etiqueta quedaba a 10px
+   del texto en el peor caso de dos renglones: demasiado apretado. Detrás, en
+   cambio, no puede chocar con nada — y la etiqueta ya lleva `text-shadow`
+   para despegarse del fondo.
+
+   Es la firma de la casa: se llama La Catedral. Al ir abriendo categorías se
+   encienden arcos bajando por la página, como la nave.
+   -------------------------------------------------------------------------- */
+.category-banner__arch {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  width: 176px;
+  height: 96px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: none;
+  border-radius: 88px 88px 0 0 / 74px 74px 0 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  transition: border-color 0.35s ease, opacity 0.35s ease;
+}
+
+.category-banner-trigger:hover .category-banner__arch,
+.category-section.is-open .category-banner__arch {
+  border-color: rgba(212, 175, 55, 0.42);
+}
+
+/* Cuántos platos hay adentro. Con las nueve categorías cerradas, saber si una
+   sección tiene 3 o 14 platos antes de abrirla es información real, no adorno.
+   Va en numeral pelado: "6 platos" obliga a resolver plurales en cuatro
+   idiomas, y el ruso tiene tres formas (1 блюдо, 2 блюда, 5 блюд). */
+.category-banner__count {
+  flex-shrink: 0;
+  min-width: 20px;
+  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: right;
+  transition: color 0.25s ease;
+}
+
+.category-section.is-open .category-banner__count {
+  color: var(--accent-gold);
+}
+
+/* Línea dorada inferior que aparece en hover/open */
+.category-banner__rule {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  right: 5%;
+  z-index: 3;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: opacity 0.3s ease, transform 0.35s ease;
+}
+
+.category-banner-trigger:hover .category-banner__rule,
+.category-section.is-open .category-banner__rule {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.category-banner__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Dimensionado contra el peor caso real de la carta, que está en ruso, no en
+   español: 37 caracteres ("Elxires Reconstituyentes Peruanos" traducido) con
+   una palabra suelta de 17 ("восстанавливающие") que no se puede cortar.
+   Con estos valores ese nombre entra en DOS renglones hasta en 360px de ancho,
+   y como dos renglones miden menos que el `min-height` de 112px, los nueve
+   banners quedan exactamente de la misma altura. Antes eran tres renglones y
+   ese banner medía el doble que "ENTRADAS". */
+.category-banner__label {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 5vw, 26px);
+  font-weight: 700;
+  /* 0.10em en vez de 0.12em: el tracking sigue leyéndose generoso, pero en un
+     nombre de 37 caracteres esos 0.02em son casi un renglón entero. */
+  letter-spacing: 0.10em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9);
+  /* Reparte los dos renglones en partes parejas en vez de dejar una palabra
+     huérfana abajo. Donde no está soportado, simplemente se ignora. */
+  text-wrap: balance;
+  /* Red de seguridad para el ruso: si una palabra sola no entra, se corta
+     antes que desbordar el banner. */
+  overflow-wrap: break-word;
+}
+
+.category-banner__chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--accent-gold);
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--accent-gold);
+  transition: transform 0.35s ease, background 0.2s ease;
+}
+
+.category-section.is-open .category-banner__chevron {
+  transform: rotate(180deg);
+}
+
+.category-banner__panel {
+  overflow: hidden;
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
+  background: var(--bg-primary);
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+
+/* Abrir es más lento que cerrar a propósito: el contenido entra con calma,
+   sale rápido para no hacer esperar al que ya decidió cerrar. */
+.category-section.is-open .category-banner__panel {
+  opacity: 1;
+  pointer-events: auto;
+  transition: max-height 0.45s ease, opacity 0.35s ease;
+}
+
+.category-banner__panel-inner {
+  padding: 16px 14px 12px;
+}
+
+/* Agrupa el encabezado de una subcategoría con sus platos. Existe para que la
+   grilla de dos columnas de escritorio se aplique a `.dish-grid` y no convierta
+   el encabezado en una celda más al lado del primer plato. */
+.subcategory-group + .subcategory-group {
+  margin-top: 6px;
+}
+
+.subcategory-head {
+  padding: 18px 2px 10px;
+}
+
+.subcategory-head__name {
+  color: var(--accent-gold);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.subcategory-head__desc {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---- Card de plato ---- */
+.dish-card {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dish-card.is-unavailable {
+  border-color: rgba(231, 76, 60, 0.42);
+}
+
+.dish-card__thumb-wrap {
+  width: 96px;
+  min-width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dish-card__thumb {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.dish-card.is-unavailable .dish-card__thumb {
+  filter: saturate(0.55);
+  opacity: 0.78;
+}
+
+.dish-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.dish-card__name-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.dish-card__name {
+  flex: 1;
+  color: var(--text-primary);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.dish-card__price {
+  color: var(--accent-gold);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dish-card__desc {
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.dish-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Chip de contorno: marca sin gritar, y no compite con el precio. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid rgba(239, 159, 39, 0.42);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent-gold);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 17px;
+  white-space: nowrap;
+}
+
+.chip--unavailable {
+  border-color: rgba(231, 76, 60, 0.55);
+  color: #f08a7e;
+}
+
+/* En la ficha del plato los chips respiran un poco más que en la card. */
+.chip--detail {
+  padding: 5px 12px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  line-height: 20px;
+}
+
+.chip--allergen {
+  border-color: rgba(184, 168, 154, 0.34);
+  color: var(--text-secondary);
 }
 
 /* ---- Cierre de la carta ---- */
@@ -316,6 +992,239 @@ body.no-scroll {
   min-height: inherit;
 }
 
+/* ---- Asistente de la carta ---- */
+.chat-hint {
+  position: fixed;
+  bottom: 78px;
+  right: 16px;
+  z-index: 9998;
+  max-width: 240px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  animation: hintFade 2.8s ease forwards;
+}
+
+.chat-bubble {
+  position: fixed;
+  bottom: 20px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dim));
+  /* Verde oscuro y no blanco: el ícono vive sobre dorado, y blanco sobre
+     #D4AF37 da menos de 2:1 de contraste. Es el mismo criterio que ya usa
+     `.menu-actions__link--primary`. */
+  color: var(--bg-primary);
+  cursor: grab;
+  line-height: 1;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  animation: pulse 2s ease 2;
+}
+
+.chat-bubble:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+.chat-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.2s ease;
+}
+
+.chat-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 50;
+  width: 100%;
+  max-width: 480px;
+  max-height: 70dvh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px 16px 0 0;
+  background: var(--bg-primary);
+  transform: translateX(-50%);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  animation: bottomSheetUp 0.35s ease;
+}
+
+.chat-sheet__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 10px 16px;
+  border-bottom: 1px solid var(--card-border);
+  border-radius: 16px 16px 0 0;
+  background: var(--bg-secondary);
+}
+
+.chat-sheet__title {
+  flex: 1;
+  color: var(--accent-gold);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* 44x44 como `.branch-sheet__close`. Antes era 32x32: el único control de la
+   app por debajo del mínimo de touch target. */
+.chat-sheet__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent-gold);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.chat-sheet__close:hover {
+  border-color: var(--accent-gold);
+  background: rgba(212, 175, 55, 0.10);
+}
+
+.chat-sheet__close:focus-visible,
+.chat-compose__send:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.chat-log {
+  flex: 1;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.chat-msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+}
+
+.chat-msg--user {
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+  background: var(--accent-gold-dim);
+  color: #fff;
+}
+
+.chat-msg--bot {
+  align-self: flex-start;
+  border: 1px solid var(--card-border);
+  border-bottom-left-radius: 4px;
+  background: var(--card-bg);
+  color: var(--text-primary);
+}
+
+.chat-msg--typing {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.chat-compose {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--card-border);
+}
+
+.chat-compose__input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+/* El inline traía `outline: none` y nada que lo reemplazara: quien escribe con
+   teclado no tenía forma de saber que el campo estaba enfocado. */
+.chat-compose__input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.chat-compose__input::placeholder {
+  color: var(--text-muted);
+}
+
+.chat-compose__send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+/* La transición de opacidad ya estaba declarada, pero sin estado que la
+   disparara: el botón deshabilitado se veía igual que el activo. */
+.chat-compose__send:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chat-error {
+  padding: 0 16px 12px;
+  color: var(--danger);
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-bubble,
+  .chat-sheet,
+  .chat-backdrop,
+  .chat-hint {
+    animation: none;
+  }
+}
+
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to   { transform: translateY(0); }
@@ -379,14 +1288,16 @@ body.no-scroll {
 }
 
 .category-banner-trigger:focus-visible,
-.dish-card-interactive:focus-visible,
+.dish-card:focus-visible,
 .dish-detail-back:focus-visible {
   outline: 3px solid var(--accent-gold);
   outline-offset: 3px;
 }
 
-.dish-card-interactive:hover {
-  border-color: rgba(212, 175, 55, 0.55) !important;
+/* El `!important` estaba para ganarle al `style` inline de la card. Sin inline,
+   sobra: `.dish-card:hover` ya tiene más especificidad que `.dish-card`. */
+.dish-card:hover {
+  border-color: rgba(212, 175, 55, 0.55);
 }
 
 .dish-detail-overlay {
@@ -548,6 +1459,28 @@ body.no-scroll {
   line-height: 1.7;
 }
 
+.dish-detail-section {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--card-border);
+}
+
+.dish-detail-section__title {
+  margin-bottom: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.dish-detail-section__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 @media (min-width: 768px) {
   .dish-detail-overlay {
     background: #07120F;
@@ -596,5 +1529,175 @@ body.no-scroll {
   .dish-detail-back {
     animation: none;
     transition: none;
+  }
+}
+
+/* ==========================================================================
+   TABLET — una sola columna, con más aire
+
+   El `max-width: 480px` del body dejaba una columna flaca en el medio de una
+   tablet. Acá se ensancha, pero la estructura no cambia: sigue siendo la carta
+   de mobile. El layout de dos columnas recién entra en 1024px.
+   ========================================================================== */
+@media (min-width: 768px) {
+  body {
+    max-width: 680px;
+  }
+
+  .category-section {
+    margin: 0 0 10px;
+  }
+
+  .menu-actions {
+    padding-inline: 0;
+  }
+}
+
+/* ==========================================================================
+   ESCRITORIO — rail de categorías + carta en dos columnas
+
+   El dueño del local va a abrir esto en una laptop. Hasta acá era una columna
+   de 480px con dos vacíos negros a los lados, porque con estilos inline no se
+   podía escribir un media query. Ese fue el motivo real de la fase 1.
+   ========================================================================== */
+@media (min-width: 1024px) {
+  body {
+    max-width: none;
+  }
+
+  /* El fondo del header sigue ocupando todo el ancho, pero su contenido queda
+     centrado en la misma caja de 1160px que la carta. Sin envoltorio extra:
+     el padding hace de centrador. */
+  .site-header {
+    padding-inline: max(32px, calc((100% - 1160px) / 2));
+  }
+
+  .branch-switcher__static {
+    padding-top: 26px;
+    font-size: 12px;
+  }
+
+  .menu-layout {
+    display: grid;
+    grid-template-columns: 232px minmax(0, 1fr);
+    gap: 40px;
+    align-items: start;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 8px 32px 0;
+  }
+
+  /* ---- La nav pasa de barra horizontal a rail vertical ---- */
+  .category-nav {
+    top: 104px;
+    border-bottom: none;
+    background: transparent;
+  }
+
+  .category-nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .category-nav__pill {
+    height: auto;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-color: transparent;
+    border-left: 2px solid transparent;
+    border-radius: 0 8px 8px 0;
+    text-align: left;
+    /* En el rail los nombres largos envuelven en vez de scrollear al costado. */
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .category-nav__pill:hover {
+    border-color: transparent;
+    border-left-color: rgba(212, 175, 55, 0.45);
+    background: rgba(212, 175, 55, 0.06);
+  }
+
+  .category-nav__pill.is-active {
+    border-color: transparent;
+    border-left-color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.10);
+  }
+
+  /* ---- La carta ---- */
+  .category-section {
+    margin: 0 0 12px;
+    /* En mobile eran 144px = header 80 + nav 56 + 8. Acá la nav es un rail
+       lateral y ya no ocupa alto, así que sobran esos 56px. */
+    scroll-margin-top: 104px;
+  }
+
+  .category-banner-trigger {
+    min-height: 132px;
+    padding: 28px;
+  }
+
+  .category-banner__panel-inner {
+    padding: 22px 22px 14px;
+  }
+
+  /* Dos columnas de platos. El encabezado de subcategoría queda fuera de la
+     grilla, por eso los platos van envueltos en `.dish-grid`. */
+  .dish-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 14px;
+  }
+
+  .menu-actions {
+    flex-direction: row;
+    gap: 12px;
+    padding: 0 0 32px;
+  }
+
+  .menu-actions__link {
+    flex: 1;
+  }
+
+  /* ---- El asistente deja de ser una hoja del piso y pasa a ser un panel ---- */
+  .chat-sheet {
+    left: auto;
+    right: 24px;
+    bottom: 24px;
+    width: 400px;
+    max-width: none;
+    max-height: min(560px, 70dvh);
+    border-radius: 16px;
+    transform: none;
+  }
+
+  .chat-sheet__head {
+    border-radius: 16px 16px 0 0;
+  }
+
+  .chat-bubble {
+    right: 24px;
+    bottom: 24px;
+  }
+
+  .chat-hint {
+    right: 24px;
+    bottom: 88px;
+  }
+}
+
+/* En pantallas anchas la grilla de platos entra en tres columnas. */
+@media (min-width: 1400px) {
+  .menu-layout {
+    max-width: 1340px;
+    grid-template-columns: 248px minmax(0, 1fr);
+  }
+
+  .dish-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }

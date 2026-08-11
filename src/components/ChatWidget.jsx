@@ -1,35 +1,79 @@
-import { useState, useContext, useRef, useEffect, useCallback } from 'react'
+import { useState, useContext, useRef, useEffect } from 'react'
 import { LanguageContext } from '../App'
-import { askDeepSeek } from '../lib/deepseekClient'
+import { askChat } from '../lib/chatClient'
+import Icon from './Icon'
 
 const EDGE_MARGIN = 16
 const DRAG_THRESHOLD = 6
 
-const HINT_TEXTS = {
-  es: '👆 Tocame si tenés preguntas del menú',
-  en: '👆 Tap me if you have questions about the menu',
-  ru: '👆 Нажми, если есть вопросы по меню',
-}
-
-const PLACEHOLDER_TEXTS = {
-  es: 'Preguntá sobre alérgenos o ingredientes...',
-  en: 'Ask about allergens or ingredients...',
-  ru: 'Спросите об аллергенах или ингредиентах...',
-}
-
-const WELCOME_MSGS = {
-  es: '👋 Consultame sobre alérgenos e ingredientes de nuestros platos.',
-  en: '👋 Ask me about allergens and ingredients in our dishes.',
-  ru: '👋 Спросите меня об аллергенах и ингредиентах в наших блюдах.',
+const COPY = {
+  hint: {
+    es: 'Tocame si tenés preguntas del menú',
+    en: 'Tap me if you have questions about the menu',
+    pt: 'Toque em mim se tiver dúvidas sobre o menu',
+    ru: 'Нажмите, если есть вопросы по меню',
+  },
+  placeholder: {
+    es: 'Preguntá sobre alérgenos o ingredientes...',
+    en: 'Ask about allergens or ingredients...',
+    pt: 'Pergunte sobre alérgenos ou ingredientes...',
+    ru: 'Спросите об аллергенах или ингредиентах...',
+  },
+  welcome: {
+    es: 'Consultame sobre alérgenos e ingredientes de nuestros platos.',
+    en: 'Ask me about allergens and ingredients in our dishes.',
+    pt: 'Pergunte-me sobre alérgenos e ingredientes dos nossos pratos.',
+    ru: 'Спросите меня об аллергенах и ингредиентах в наших блюдах.',
+  },
+  title: {
+    es: 'Asistente La Catedral del Pisco',
+    en: 'La Catedral del Pisco Assistant',
+    pt: 'Assistente La Catedral del Pisco',
+    ru: 'Ассистент La Catedral del Pisco',
+  },
+  open: {
+    es: 'Abrir el asistente',
+    en: 'Open the assistant',
+    pt: 'Abrir o assistente',
+    ru: 'Открыть ассистента',
+  },
+  close: {
+    es: 'Cerrar el asistente',
+    en: 'Close the assistant',
+    pt: 'Fechar o assistente',
+    ru: 'Закрыть ассистента',
+  },
+  send: {
+    es: 'Enviar mensaje',
+    en: 'Send message',
+    pt: 'Enviar mensagem',
+    ru: 'Отправить сообщение',
+  },
+  typing: {
+    es: 'Escribiendo...',
+    en: 'Typing...',
+    pt: 'Escrevendo...',
+    ru: 'Печатает...',
+  },
+  unreachable: {
+    es: 'No pude conectarme. Consultá con el mozo.',
+    en: "I couldn't connect. Please ask your waiter.",
+    pt: 'Não consegui conectar. Fale com o garçom.',
+    ru: 'Не удалось подключиться. Обратитесь к официанту.',
+  },
+  connectionError: {
+    es: 'Error de conexión.',
+    en: 'Connection error.',
+    pt: 'Erro de conexão.',
+    ru: 'Ошибка соединения.',
+  },
 }
 
 export default function ChatWidget({ branchSlug }) {
   const { locale } = useContext(LanguageContext)
   const [open, setOpen] = useState(false)
   const [showHint, setShowHint] = useState(true)
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: WELCOME_MSGS[locale] },
-  ])
+  const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -40,6 +84,19 @@ export default function ChatWidget({ branchSlug }) {
   const suppressClick = useRef(false)
 
   const t = (obj) => obj[locale] || obj.es
+
+  /**
+   * El saludo se deriva, no se guarda en el estado.
+   *
+   * Antes se metía como primer mensaje al montar el componente, así que
+   * quedaba congelado en el idioma que estuviera activo en ese momento: si el
+   * comensal después pasaba la carta a portugués, el saludo seguía en
+   * castellano. Derivándolo, sigue siempre al idioma actual, y además no se
+   * manda al modelo como historial (no aporta contexto y gasta tokens).
+   */
+  const transcript = messages.length > 0
+    ? messages
+    : [{ role: 'assistant', content: t(COPY.welcome) }]
 
   useEffect(() => {
     const timer = setTimeout(() => setShowHint(false), 2800)
@@ -60,22 +117,21 @@ export default function ChatWidget({ branchSlug }) {
     setInput('')
     setError(null)
 
-    const userMsg = { role: 'user', content: text }
-    const updated = [...messages, userMsg]
+    const updated = [...messages, { role: 'user', content: text }]
     setMessages(updated)
 
     setLoading(true)
     try {
-      const reply = await askDeepSeek(
+      const reply = await askChat(
         updated.map((m) => ({ role: m.role, content: m.content })),
-        branchSlug
+        branchSlug,
       )
       setMessages((prev) => [...prev, { role: 'assistant', content: reply }])
     } catch (err) {
       setError(err.message)
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: getErrorMsg(locale) },
+        { role: 'assistant', content: t(COPY.unreachable) },
       ])
     } finally {
       setLoading(false)
@@ -174,193 +230,92 @@ export default function ChatWidget({ branchSlug }) {
 
   return (
     <>
-      {!open && showHint && (
-        <div style={styles.hint}>
-          {t(HINT_TEXTS)}
-        </div>
-      )}
+      {!open && showHint && <div className="chat-hint">{t(COPY.hint)}</div>}
 
       {!open && (
         <button
           ref={bubbleRef}
           type="button"
+          className="chat-bubble"
           onClick={handleBubbleClick}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          style={styles.bubble}
-          aria-label="Abrir chat"
+          aria-label={t(COPY.open)}
         >
-          💬
+          <Icon name="chat" size={24} />
         </button>
       )}
 
       {open && (
         <>
-          <div style={styles.backdrop} onClick={() => setOpen(false)} />
+          <div className="chat-backdrop" onClick={() => setOpen(false)} />
 
-          <div style={styles.sheet}>
-            <div style={styles.sheetHeader}>
-              <span style={styles.sheetTitle}>
-                {t({ es: 'Asistente La Catedral del Pisco', en: 'La Catedral del Pisco Assistant', ru: 'Ассистент La Catedral del Pisco' })}
-              </span>
-              <button onClick={() => setOpen(false)} style={styles.minBtn}>▼</button>
+          <div
+            className="chat-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t(COPY.title)}
+          >
+            <div className="chat-sheet__head">
+              <span className="chat-sheet__title">{t(COPY.title)}</span>
+              <button
+                type="button"
+                className="chat-sheet__close"
+                onClick={() => setOpen(false)}
+                aria-label={t(COPY.close)}
+              >
+                <Icon name="chevronDown" size={18} />
+              </button>
             </div>
 
-            <div style={styles.chatBox}>
-              {messages.map((msg, i) => (
-                <div key={i} style={{
-                  ...styles.message,
-                  ...(msg.role === 'user' ? styles.userMsg : styles.botMsg),
-                }}>
+            {/* `aria-live`: las respuestas llegan solas, sin que el lector de
+                pantalla mueva el foco. Sin esto, quien no ve la pantalla no se
+                entera de que el asistente contestó. */}
+            <div className="chat-log" aria-live="polite">
+              {transcript.map((msg, i) => (
+                <div
+                  key={i}
+                  className={`chat-msg chat-msg--${msg.role === 'user' ? 'user' : 'bot'}`}
+                >
                   {msg.content}
                 </div>
               ))}
               {loading && (
-                <div style={{ ...styles.message, ...styles.botMsg, fontStyle: 'italic', opacity: 0.7 }}>
-                  {t({ es: 'Escribiendo...', en: 'Typing...', ru: 'Печатает...' })}
+                <div className="chat-msg chat-msg--bot chat-msg--typing">
+                  {t(COPY.typing)}
                 </div>
               )}
               <div ref={endRef} />
             </div>
 
-            <div style={styles.inputRow}>
+            <div className="chat-compose">
               <input
                 ref={inputRef}
                 type="text"
+                className="chat-compose__input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={PLACEHOLDER_TEXTS[locale]}
+                placeholder={t(COPY.placeholder)}
                 disabled={loading}
-                style={styles.input}
+                aria-label={t(COPY.placeholder)}
               />
               <button
+                type="button"
+                className="chat-compose__send"
                 onClick={handleSend}
                 disabled={!input.trim() || loading}
-                style={styles.sendBtn}
+                aria-label={t(COPY.send)}
               >
-                ➤
+                <Icon name="send" size={18} />
               </button>
             </div>
-            {error && <p style={styles.error}>{t({
-              es: 'Error de conexión. Revisá la consola del servidor.',
-              en: 'Connection error. Check server console.',
-              ru: 'Ошибка соединения. Проверьте консоль сервера.',
-            })}</p>}
+            {error && <p className="chat-error">{t(COPY.connectionError)}</p>}
           </div>
         </>
       )}
     </>
   )
-}
-
-function getErrorMsg(locale) {
-  const msgs = {
-    es: '⚠️ No pude conectar con el asistente. Revisá la consola del servidor.',
-    en: '⚠️ Could not reach the assistant. Check the server console.',
-    ru: '⚠️ Не удалось связаться с ассистентом. Проверьте консоль сервера.',
-  }
-  return msgs[locale] || msgs.en
-}
-
-const styles = {
-  hint: {
-    position: 'fixed', bottom: '78px', right: '16px', zIndex: 9998,
-    background: 'var(--bg-secondary)', color: 'var(--text-primary)',
-    padding: '8px 14px', borderRadius: '8px', fontSize: '13px',
-    fontFamily: 'var(--font-sans)',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-    maxWidth: '240px',
-    animation: 'hintFade 2.8s ease forwards',
-    pointerEvents: 'none',
-  },
-  bubble: {
-    position: 'fixed',
-    bottom: '20px',
-    right: '16px',
-    zIndex: 9999,
-    width: '56px', height: '56px', borderRadius: '50%',
-    border: 'none',
-    background: 'linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dim))',
-    color: '#fff', fontSize: '26px',
-    cursor: 'grab',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
-    animation: 'pulse 2s ease 2',
-    touchAction: 'none',
-    userSelect: 'none',
-    WebkitUserSelect: 'none',
-    padding: 0,
-    lineHeight: 1,
-  },
-  backdrop: {
-    position: 'fixed', inset: 0, zIndex: 45,
-    background: 'rgba(0,0,0,0.4)',
-    animation: 'fadeIn 0.2s ease',
-  },
-  sheet: {
-    position: 'fixed', bottom: 0, left: '50%', transform: 'translateX(-50%)',
-    width: '100%', maxWidth: '480px', zIndex: 50,
-    background: 'var(--bg-primary)',
-    borderTopLeftRadius: '16px', borderTopRightRadius: '16px',
-    maxHeight: '70dvh',
-    display: 'flex', flexDirection: 'column',
-    animation: 'bottomSheetUp 0.35s ease',
-    boxShadow: '0 -4px 24px rgba(0,0,0,0.5)',
-  },
-  sheetHeader: {
-    display: 'flex', alignItems: 'center',
-    padding: '14px 16px', gap: '8px',
-    borderBottom: '1px solid var(--card-border)',
-    background: 'var(--bg-secondary)',
-    borderTopLeftRadius: '16px', borderTopRightRadius: '16px',
-  },
-  sheetTitle: {
-    fontFamily: 'var(--font-serif)', fontSize: '16px', fontWeight: 600,
-    color: 'var(--accent-gold)', flex: 1,
-  },
-  minBtn: {
-    background: 'transparent', border: '1px solid var(--card-border)',
-    color: 'var(--accent-gold)', width: '32px', height: '32px',
-    borderRadius: '6px', fontSize: '14px', cursor: 'pointer',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  chatBox: {
-    flex: 1, overflowY: 'auto', padding: '12px 16px',
-    display: 'flex', flexDirection: 'column', gap: '10px',
-    minHeight: '120px',
-  },
-  message: {
-    padding: '10px 14px', borderRadius: '12px',
-    fontSize: '14px', lineHeight: 1.4, maxWidth: '85%', wordWrap: 'break-word',
-  },
-  userMsg: {
-    background: 'var(--accent-gold-dim)', color: '#fff',
-    alignSelf: 'flex-end', borderBottomRightRadius: '4px',
-  },
-  botMsg: {
-    background: 'var(--card-bg)', color: 'var(--text-primary)',
-    alignSelf: 'flex-start', borderBottomLeftRadius: '4px',
-    border: '1px solid var(--card-border)',
-  },
-  inputRow: {
-    display: 'flex', gap: '8px', padding: '12px 16px',
-    borderTop: '1px solid var(--card-border)',
-  },
-  input: {
-    flex: 1, padding: '10px 14px', borderRadius: '8px',
-    border: '1px solid var(--card-border)', background: 'var(--bg-secondary)',
-    color: 'var(--text-primary)', fontSize: '14px',
-    fontFamily: 'var(--font-sans)', outline: 'none',
-  },
-  sendBtn: {
-    width: '42px', height: '42px', borderRadius: '50%', border: 'none',
-    background: 'var(--accent-gold)', color: 'var(--bg-primary)',
-    fontSize: '18px', cursor: 'pointer',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    flexShrink: 0, transition: 'opacity 0.2s',
-  },
-  error: { fontSize: '12px', color: 'var(--danger)', padding: '0 16px 12px' },
 }

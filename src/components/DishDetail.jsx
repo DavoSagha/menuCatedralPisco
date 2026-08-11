@@ -130,13 +130,13 @@ export default function DishDetail({ dish, onClose }) {
             )}
 
             {dish.diet_tags && dish.diet_tags.length > 0 && (
-              <section style={styles.section}>
-                <h3 style={styles.sectionTitle}>
+              <section className="dish-detail-section">
+                <h3 className="dish-detail-section__title">
                   {DIET_HEADING[locale] || DIET_HEADING.es}
                 </h3>
-                <div style={styles.tagsRow}>
+                <div className="dish-detail-section__tags">
                   {dish.diet_tags.map((tag) => (
-                    <span key={tag} style={styles.chip}>
+                    <span key={tag} className="chip chip--detail">
                       {labelFor(DIET_LABELS, tag, locale)}
                     </span>
                   ))}
@@ -145,13 +145,13 @@ export default function DishDetail({ dish, onClose }) {
             )}
 
             {dish.allergens && dish.allergens.length > 0 && (
-              <section style={styles.section}>
-                <h3 style={styles.sectionTitle}>
+              <section className="dish-detail-section">
+                <h3 className="dish-detail-section__title">
                   {ALLERGENS_HEADING[locale] || ALLERGENS_HEADING.es}
                 </h3>
-                <div style={styles.tagsRow}>
+                <div className="dish-detail-section__tags">
                   {dish.allergens.map((allergen) => (
-                    <span key={allergen} style={{ ...styles.chip, ...styles.allergenChip }}>
+                    <span key={allergen} className="chip chip--detail chip--allergen">
                       <Icon name="alert" size={13} strokeWidth={2} />
                       {labelFor(ALLERGEN_LABELS, allergen, locale)}
                     </span>
@@ -166,34 +166,3 @@ export default function DishDetail({ dish, onClose }) {
   )
 }
 
-const styles = {
-  section: {
-    paddingTop: '18px',
-    marginTop: '18px',
-    borderTop: '1px solid var(--card-border)',
-  },
-  sectionTitle: {
-    marginBottom: '10px',
-    color: 'var(--text-muted)',
-    fontFamily: 'var(--font-heading)',
-    fontSize: '11px',
-    fontWeight: 600,
-    letterSpacing: '0.16em',
-    textTransform: 'uppercase',
-  },
-  tagsRow: { display: 'flex', flexWrap: 'wrap', gap: '8px' },
-  /* Un solo sistema de chip. Antes cada alérgeno traía su propio color de la
-     paleta Flat UI 2013 y la ficha parecía un tablero de tickets. */
-  chip: {
-    display: 'inline-flex', alignItems: 'center', gap: '6px',
-    padding: '5px 12px', borderRadius: '999px',
-    border: '1px solid rgba(239, 159, 39, 0.42)',
-    color: 'var(--accent-gold)', background: 'transparent',
-    fontFamily: 'var(--font-sans)', fontSize: '13px', fontWeight: 500,
-    letterSpacing: '0.02em', lineHeight: '20px',
-  },
-  allergenChip: {
-    borderColor: 'rgba(184, 168, 154, 0.34)',
-    color: 'var(--text-secondary)',
-  },
-}

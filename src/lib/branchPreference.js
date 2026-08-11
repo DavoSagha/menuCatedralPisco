@@ -6,7 +6,7 @@
  * editar cualquiera desde la consola, así que se trata como entrada sucia.
  */
 
-const STORAGE_KEY = 'tucson.branch'
+const STORAGE_KEY = 'catedral.branch'
 const SLUG_PATTERN = /^[a-z0-9][a-z0-9-]{0,63}$/
 
 function safeStorage() {

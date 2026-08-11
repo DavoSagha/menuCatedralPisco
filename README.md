@@ -1,10 +1,18 @@
-# Tucson — Carta Digital con Asistente IA
+# La Catedral del Pisco — Carta Digital
 
-Demo de carta digital multi-idioma (ES/EN/RU) para restaurante, con asistente de IA integrado.
+Carta digital multi-idioma (ES / EN / PT / RU) para La Catedral del Pisco, cocina
+peruana en Av. Corrientes 3126, Buenos Aires.
+
+El comensal escanea un QR en la mesa y abre la carta de su sucursal. Incluye un
+asistente que responde consultas sobre alérgenos e ingredientes, y un panel de
+administración para gestionar productos, precios y disponibilidad por sucursal.
 
 ## Requisitos
 
-- Node.js >= 18
+- **Node.js 20.19+** (se recomienda 22 LTS)
+
+  `@supabase/supabase-js` ya marca Node 20 como deprecado y lo va a dejar de
+  soportar. En Node 20 hoy funciona, pero imprime un aviso al arrancar.
 
 ## Instalación
 
@@ -12,14 +20,32 @@ Demo de carta digital multi-idioma (ES/EN/RU) para restaurante, con asistente de
 npm install
 ```
 
+## Variables de entorno
+
+Crear un `.env` en la raíz:
+
+| Variable | Dónde se usa | Descripción |
+|---|---|---|
+| `VITE_SUPABASE_URL` | cliente + servidor | URL del proyecto de Supabase |
+| `VITE_SUPABASE_ANON_KEY` | cliente | Clave pública (anon) de Supabase |
+| `SUPABASE_SERVICE_KEY` | servidor | Clave de servicio. **Nunca exponer al navegador** |
+| `GEMINI_API_KEY` | servidor | Clave de la API de Gemini, para el asistente |
+| `PORT` | servidor | Puerto de Express (default: `3002`) |
+| `TRUST_PROXY` | servidor | Definir solo si corre detrás de un proxy o CDN |
+
+Las variables con prefijo `VITE_` quedan embebidas en el bundle del navegador —
+son públicas por diseño. Las otras **nunca** deben llevar ese prefijo.
+
 ## Desarrollo
 
 ```bash
 npm run dev
 ```
 
-Esto arranca Vite (frontend) y el servidor Express (API) simultáneamente.
-Abrir `http://localhost:5173`.
+Levanta Vite y Express en paralelo. Abrir **http://localhost:5173**.
+
+Express corre en el puerto `3002` y sirve solo la API: en desarrollo, entrar
+directo a ese puerto devuelve 404 porque `dist/` todavía no existe. Es normal.
 
 ## Producción
 
@@ -28,30 +54,35 @@ npm run build
 npm start
 ```
 
-El servidor Express sirve los archivos estáticos de `dist/` y la API de chat.
-Abrir `http://localhost:3001`.
+Express pasa a servir los estáticos de `dist/` además de la API. Abrir
+**http://localhost:3002**.
 
-## Chat de IA
+## Tests
 
-Crear un archivo `.env` en la raíz del proyecto (ya existe, solo completar):
-
+```bash
+npm test
 ```
-DEEPSEEK_API_KEY=sk-...
-```
-
-La API key se obtiene en [platform.deepseek.com](https://platform.deepseek.com).
-
-**Importante**: la clave se usa SOLO del lado del servidor (Express), nunca se envía
-al navegador. El frontend envía los mensajes al endpoint `/api/chat` del servidor,
-y este se encarga de llamar a la API de DeepSeek.
 
 ## Datos del menú
 
-Editar `data/menu-data.json` para modificar platos, precios, alérgenos e ingredientes.
+La carta vive en **Supabase**, no en archivos. `data/menu-data.json` es solo la
+semilla inicial y la fuente para los scripts:
 
-## Variables de entorno
-
-| Variable | Descripción |
+| Script | Qué hace |
 |---|---|
-| `DEEPSEEK_API_KEY` | API key de DeepSeek (obligatoria para el chat) |
-| `PORT` | Puerto del servidor Express (default: 3001) |
+| `npm run seed` | Carga `data/menu-data.json` en Supabase |
+| `node scripts/reseed-menu.js` | Regenera el menú desde el JSON |
+| `node scripts/translate-menu.js` | Traduce el JSON a los cuatro idiomas |
+
+Para cambiar precios o platos del día a día se usa el panel de administración
+(`/admin`), no el JSON.
+
+## El asistente
+
+El navegador **nunca** ve la clave de Gemini. El frontend postea a `/api/chat`
+en nuestro propio Express, y ese servidor es quien llama al modelo con la clave
+guardada del lado del servidor.
+
+El prompt del sistema restringe al asistente a los datos del menú que se le
+pasan como contexto: no puede inventar platos, precios ni alérgenos, y ante una
+duda deriva al mozo.

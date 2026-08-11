@@ -286,7 +286,14 @@ export async function getMenuData(branchSlug) {
   }))
 
   return {
-    restaurant: { name: { es: 'La Catedral del Pisco', en: 'La Catedral del Pisco', ru: 'Таксон' } },
+    restaurant: {
+      name: {
+        es: 'La Catedral del Pisco',
+        en: 'La Catedral del Pisco',
+        pt: 'La Catedral del Pisco',
+        ru: 'Ла Катедраль дель Писко',
+      },
+    },
     categories: merged,
     branch,
   }
