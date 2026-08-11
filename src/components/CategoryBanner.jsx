@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, useEffect } from 'react'
+import { useState, useContext, useRef, useEffect, useCallback } from 'react'
 import { LanguageContext } from '../App'
 import DishCard from './DishCard'
 import Icon from './Icon'
@@ -11,6 +11,8 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
   const { locale } = useContext(LanguageContext)
   const [animating, setAnimating] = useState(false)
   const [contentHeight, setContentHeight] = useState(0)
+  const [hovered, setHovered] = useState(false)
+  const [pressed, setPressed] = useState(false)
   const contentRef = useRef(null)
   const isFirstRender = useRef(true)
 
@@ -80,14 +82,27 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
         type="button"
         onClick={handleToggle}
         className="category-banner-trigger"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => { setHovered(false); setPressed(false) }}
+        onPointerDown={() => setPressed(true)}
+        onPointerUp={() => setPressed(false)}
+        onPointerCancel={() => setPressed(false)}
         style={{
           ...styles.banner,
           ...(bgImage ? { backgroundImage: bgImage } : {}),
+          ...(hovered && !pressed ? styles.bannerHover : {}),
+          ...(pressed ? styles.bannerActive : {}),
         }}
         aria-expanded={open}
         aria-controls={panelId}
       >
         <div style={styles.overlay} />
+        {/* Línea dorada inferior que aparece en hover/open */}
+        <div style={{
+          ...styles.goldLine,
+          opacity: (hovered || open) ? 1 : 0,
+          transform: (hovered || open) ? 'scaleX(1)' : 'scaleX(0)',
+        }} />
         <div style={styles.content}>
           <span style={styles.label}>{t(category.name)}</span>
           <span
@@ -146,16 +161,16 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
 
 const styles = {
   wrapper: {
-    margin: 0,
+    /* Separación entre banners: el fondo oscuro queda visible entre cards */
+    margin: '0 10px 8px',
     padding: 0,
     height: 'auto',
     overflow: 'hidden',
-    borderBottom: 'none',
+    borderRadius: '12px',
+    border: '1px solid rgba(212, 175, 55, 0.10)',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.35)',
     outline: 'none',
-    boxShadow: 'none',
   },
-  /* 112px en vez de 150px: con 8 categorías cerradas eran ~1200px de banners
-     antes de ver un solo plato. */
   banner: {
     width: '100%',
     position: 'relative',
@@ -170,12 +185,33 @@ const styles = {
     fontFamily: 'var(--font-sans)',
     minHeight: '112px',
     outline: 'none',
+    transition: 'filter 0.25s ease, transform 0.2s ease',
+  },
+  bannerHover: {
+    filter: 'brightness(1.08)',
+  },
+  bannerActive: {
+    filter: 'brightness(0.92)',
+    transform: 'scale(0.995)',
   },
   overlay: {
     position: 'absolute',
     inset: 0,
-    background: 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.68) 100%)',
+    /* Gradiente diagonal: oscuro abajo-izquierda, semitransparente arriba-derecha */
+    background: 'linear-gradient(135deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.40) 55%, rgba(0,0,0,0.55) 100%)',
     zIndex: 1,
+  },
+  goldLine: {
+    position: 'absolute',
+    bottom: 0,
+    left: '5%',
+    right: '5%',
+    height: '2px',
+    borderRadius: '2px',
+    background: 'linear-gradient(90deg, transparent, var(--accent-gold), transparent)',
+    zIndex: 3,
+    transformOrigin: 'center',
+    transition: 'opacity 0.3s ease, transform 0.35s ease',
   },
   content: {
     position: 'relative',
@@ -192,13 +228,13 @@ const styles = {
     letterSpacing: '0.12em',
     flex: 1,
     textTransform: 'uppercase',
-    textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+    textShadow: '0 2px 12px rgba(0,0,0,0.8), 0 1px 3px rgba(0,0,0,0.9)',
   },
   arrowBox: {
     width: '38px',
     height: '38px',
     borderRadius: '50%',
-    background: 'rgba(239,159,39,0.12)',
+    background: 'rgba(212,175,55,0.12)',
     border: '1px solid var(--accent-gold)',
     color: 'var(--accent-gold)',
     display: 'flex',
@@ -210,6 +246,7 @@ const styles = {
   dishesContainer: {
     overflow: 'hidden',
     background: 'var(--bg-primary)',
+    borderTop: '1px solid rgba(212, 175, 55, 0.08)',
   },
   dishesInner: {
     padding: '16px 14px 12px',

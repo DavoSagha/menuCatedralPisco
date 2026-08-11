@@ -197,18 +197,14 @@ body.no-scroll {
 }
 
 .category-section {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 88px; /* un poco más de margen para que el banner no quede bajo la nav */
   height: auto;
-  margin: 0;
-  padding: 0;
-  border-bottom: none;
   outline: none;
-  box-shadow: none;
 }
 
-.category-section:not(.is-open) {
-  margin-bottom: 0;
-  padding-bottom: 0;
+/* Primera categoría: margen superior para separar del BranchSwitcher */
+.category-section:first-of-type {
+  margin-top: 8px;
 }
 
 .sr-only {

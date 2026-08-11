@@ -162,6 +162,40 @@
   gap: 10px;
 }
 
+/* Wrapper que contiene la card + botón de edición */
+.admin-nav-card-wrapper {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.admin-nav-card-wrapper .admin-nav-card {
+  flex: 1;
+  border-radius: 10px 0 0 10px;
+}
+
+.admin-nav-card__edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--card-border);
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.admin-nav-card__edit-btn:hover {
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--accent-gold);
+}
+
+
 .admin-nav-card {
   display: flex;
   min-width: 0;

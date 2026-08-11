@@ -1,4 +1,4 @@
-﻿import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LanguageContext } from '../App'
 import { logout } from '../lib/auth'
@@ -14,6 +14,8 @@ import { getSupabase } from '../lib/supabaseClient'
 import AdminBranchDetail from './AdminBranchDetail'
 import AdminMenuEditor from './AdminMenuEditor'
 import AdminProductImageEditor from './AdminProductImageEditor'
+import AdminCategoryEditor from './AdminCategoryEditor'
+import AdminSubcategoryEditor from './AdminSubcategoryEditor'
 import './admin.css'
 
 function translated(value, locale = 'es') {
@@ -54,6 +56,8 @@ export default function AdminPanel() {
   const [deletedError, setDeletedError] = useState('')
   const [editor, setEditor] = useState(null)
   const [imageDish, setImageDish] = useState(null)
+  const [categoryEditor, setCategoryEditor] = useState(null)   // null | { category } | { category: null }
+  const [subcategoryEditor, setSubcategoryEditor] = useState(null) // null | { subcategory, categoryId }
   const [processingId, setProcessingId] = useState(null)
 
   const t = (messages) => messages[locale] || messages.es
@@ -125,6 +129,15 @@ export default function AdminPanel() {
   const handleLogout = async () => {
     await logout()
     navigate('/', { replace: true })
+  }
+
+  // ── Callbacks de guardado de categoría / subcategoría ────────────────────────
+  const handleCategorySaved = async (saved) => {
+    await loadBaseData() // recarga solo el catálogo (tabla chica)
+  }
+
+  const handleSubcategorySaved = async (saved) => {
+    await loadBaseData()
   }
 
   const handleTabChange = (nextTab) => {
@@ -238,7 +251,15 @@ export default function AdminPanel() {
               <section aria-labelledby="products-heading">
                 <div className="admin-section-heading">
                   <div><p className="admin-eyebrow">Categoría → Subcategoría → Producto</p><h2 id="products-heading">Menú</h2></div>
-                  <button type="button" className="admin-button admin-button--primary" onClick={() => setEditor({ dish: null, categoryId: selectedCategoryId, subcategoryId: selectedSubcategoryId })}>+ Nuevo producto</button>
+                  <div className="admin-action-group">
+                    {!selectedCategory && (
+                      <button type="button" className="admin-button admin-button--secondary" onClick={() => setCategoryEditor({ category: null })}>+ Categoría</button>
+                    )}
+                    {selectedCategory && !selectedSubcategory && (
+                      <button type="button" className="admin-button admin-button--secondary" onClick={() => setSubcategoryEditor({ subcategory: null, categoryId: selectedCategoryId })}>+ Subcategoría</button>
+                    )}
+                    <button type="button" className="admin-button admin-button--primary" onClick={() => setEditor({ dish: null, categoryId: selectedCategoryId, subcategoryId: selectedSubcategoryId })}>+ Producto</button>
+                  </div>
                 </div>
 
                 <div className="admin-breadcrumb" aria-label="Ruta actual">
@@ -251,10 +272,18 @@ export default function AdminPanel() {
                   catalog.length ? (
                     <div className="admin-navigation-grid">
                       {catalog.map((category) => (
-                        <button type="button" key={category.id} className="admin-nav-card admin-nav-card--category" onClick={() => setSelectedCategoryId(String(category.id))}>
-                          {category.image && <img src={category.image} alt="" loading="lazy" />}
-                          <span><strong>{translated(category.name, locale)}</strong><small>{category.subcategories?.length || 0} subcategorías</small></span><span aria-hidden="true">→</span>
-                        </button>
+                        <div key={category.id} className="admin-nav-card-wrapper">
+                          <button type="button" className="admin-nav-card admin-nav-card--category" onClick={() => setSelectedCategoryId(String(category.id))}>
+                            {category.image && <img src={category.image} alt="" loading="lazy" />}
+                            <span><strong>{translated(category.name, locale)}</strong><small>{category.subcategories?.length || 0} subcategorías</small></span><span aria-hidden="true">→</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="admin-nav-card__edit-btn"
+                            title="Editar categoría"
+                            onClick={() => setCategoryEditor({ category })}
+                          >✎</button>
+                        </div>
                       ))}
                     </div>
                   ) : <Status>No hay categorías configuradas.</Status>
@@ -264,9 +293,17 @@ export default function AdminPanel() {
                   selectedCategory.subcategories?.length ? (
                     <div className="admin-navigation-grid">
                       {selectedCategory.subcategories.map((subcategory) => (
-                        <button type="button" key={subcategory.id} className="admin-nav-card" onClick={() => setSelectedSubcategoryId(String(subcategory.id))}>
-                          <span><strong>{translated(subcategory.name, locale)}</strong><small>{translated(subcategory.description, locale)}</small></span><span aria-hidden="true">→</span>
-                        </button>
+                        <div key={subcategory.id} className="admin-nav-card-wrapper">
+                          <button type="button" className="admin-nav-card" onClick={() => setSelectedSubcategoryId(String(subcategory.id))}>
+                            <span><strong>{translated(subcategory.name, locale)}</strong><small>{translated(subcategory.description, locale)}</small></span><span aria-hidden="true">→</span>
+                          </button>
+                          <button
+                            type="button"
+                            className="admin-nav-card__edit-btn"
+                            title="Editar subcategoría"
+                            onClick={() => setSubcategoryEditor({ subcategory, categoryId: selectedCategoryId })}
+                          >✎</button>
+                        </div>
                       ))}
                     </div>
                   ) : <Status>Esta categoría no tiene subcategorías.</Status>
@@ -347,6 +384,23 @@ export default function AdminPanel() {
           dish={imageDish}
           onClose={() => setImageDish(null)}
           onSaved={async () => loadItems(selectedSubcategoryId)}
+        />
+      )}
+      {categoryEditor && (
+        <AdminCategoryEditor
+          key={categoryEditor.category?.id || 'new-cat'}
+          category={categoryEditor.category}
+          onClose={() => setCategoryEditor(null)}
+          onSaved={handleCategorySaved}
+        />
+      )}
+      {subcategoryEditor && (
+        <AdminSubcategoryEditor
+          key={subcategoryEditor.subcategory?.id || 'new-subcat'}
+          subcategory={subcategoryEditor.subcategory}
+          categoryId={subcategoryEditor.categoryId}
+          onClose={() => setSubcategoryEditor(null)}
+          onSaved={handleSubcategorySaved}
         />
       )}
     </main>

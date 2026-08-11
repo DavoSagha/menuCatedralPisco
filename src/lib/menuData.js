@@ -90,6 +90,85 @@ async function removeStoredImage(image) {
   if (error) throw error
 }
 
+const CATEGORY_IMAGE_BUCKET = 'product-images'
+
+export async function createCategory(fields) {
+  const { data, error } = await getSupabase()
+    .from('categories')
+    .insert(fields)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function updateCategory(id, fields) {
+  const { data, error } = await getSupabase()
+    .from('categories')
+    .update(fields)
+    .eq('id', Number(id))
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function createSubcategory(fields) {
+  const { data, error } = await getSupabase()
+    .from('subcategories')
+    .insert(fields)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function updateSubcategory(id, fields) {
+  const { data, error } = await getSupabase()
+    .from('subcategories')
+    .update(fields)
+    .eq('id', Number(id))
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function replaceCategoryImage(categoryId, file, currentImage = null) {
+  const id = requirePositiveId(categoryId, 'El ID de categoría')
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file?.type)) {
+    throw new Error('Formato de imagen no válido. Usá JPG, PNG o WebP.')
+  }
+  if (file.size > 5 * 1024 * 1024) throw new Error('La imagen no puede superar los 5 MB.')
+
+  const ext = file.type === 'image/png' ? 'png' : file.type === 'image/webp' ? 'webp' : 'jpg'
+  const uniqueId = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  const path = `categories/${id}/${uniqueId}.${ext}`
+
+  const storage = getSupabase().storage.from(CATEGORY_IMAGE_BUCKET)
+  const { error: uploadError } = await storage.upload(path, file, {
+    cacheControl: '3600', contentType: file.type, upsert: false,
+  })
+  if (uploadError) throw uploadError
+
+  const publicUrl = storage.getPublicUrl(path).data.publicUrl
+
+  try {
+    await updateCategory(id, { image: publicUrl })
+  } catch (err) {
+    await storage.remove([path])
+    throw err
+  }
+
+  // Borrar imagen anterior si estaba en nuestro storage
+  if (currentImage) {
+    const oldPath = getManagedImagePath(currentImage)
+    if (oldPath) await storage.remove([oldPath]).catch(() => {})
+  }
+
+  return publicUrl
+}
+
 export async function getBranches() {
   const { data, error } = await getSupabase().from('branches').select('*').order('id')
   if (error) throw error

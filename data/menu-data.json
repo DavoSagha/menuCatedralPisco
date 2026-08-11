@@ -1,181 +1,422 @@
 {
   "restaurant": "La Catedral del Pisco",
-  "languages": ["es", "en", "pt", "ru"],
+  "languages": [
+    "es",
+    "en",
+    "pt",
+    "ru"
+  ],
   "categories": [
     {
       "id": "entradas",
-      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=250&fit=crop",
-      "name": { "es": "Entradas", "en": "Starters", "pt": "Entradas", "ru": "Закуски" },
+      "name": {
+        "es": "Entradas",
+        "en": "Starters",
+        "pt": "Entradas",
+        "ru": "Закуски"
+      },
       "subcategories": [
         {
           "id": "entradas_clasicas",
-          "name": { "es": "Entradas clásicas", "en": "Classic starters", "pt": "Entradas clássicas", "ru": "Классические закуски" },
-          "description": { "es": "", "en": "", "pt": "", "ru": "" },
+          "name": {
+            "es": "Entradas clásicas",
+            "en": "Classic Starters",
+            "pt": "Entradas clássicas",
+            "ru": "Классические закуски"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
           "items": [
             {
-              "id": "empanada_lomo_saltado",
-              "name": { "es": "Empanada de Lomo Saltado", "en": "Lomo Saltado Empanada", "pt": "Empanada de Lomo Saltado", "ru": "Эмпанада Ломо Сальтадо" },
+              "id": "papas_huancaina",
+              "name": {
+                "es": "Papas a la Huancaína",
+                "en": "Papas a la Huancaína",
+                "pt": "Papas a la Huancaína",
+                "ru": "Papas a la Huancaína"
+              },
               "description": {
-                "es": "Tomate, cebolla, cilantro, ají amarillo. Acompañado de salsa huancaína.",
-                "en": "Tomato, onion, coriander, yellow chili. Served with huancaína sauce.",
-                "pt": "Tomate, cebola, coentro, ají amarelo. Acompanhado de molho huancaína.",
-                "ru": "Помидор, лук, кинза, желтый перец. Подается с соусом уанкаина."
+                "es": "Papas, ají amarillo, huevo cocido, aceituna y queso andino frito.",
+                "en": "Potatoes, ají amarillo, boiled egg, olive, and fried Andean cheese.",
+                "pt": "Batatas, ají amarillo, ovo cozido, azeitona e queijo andino frito.",
+                "ru": "Картофель, ají amarillo, вареное яйцо, оливки и жареный андский сыр."
               },
               "price": 20000,
               "currency": "ARS",
-              "ingredients": ["carne de lomo", "tomate", "cebolla", "cilantro", "ají amarillo", "salsa huancaína"],
-              "allergens": ["gluten", "lactosa"],
+              "ingredients": [
+                "papa",
+                "ají amarillo",
+                "huevo",
+                "aceituna",
+                "queso andino"
+              ],
+              "allergens": [
+                "lactosa"
+              ],
+              "diet_tags": [
+                "vegetariano"
+              ],
+              "spicy": false
+            },
+            {
+              "id": "papa_rellena",
+              "name": {
+                "es": "Papa Rellena",
+                "en": "Papa Rellena",
+                "pt": "Papa Rellena",
+                "ru": "Papa Rellena"
+              },
+              "description": {
+                "es": "Lomo cortado a cuchillo, huevo cocido y aceitunas. Bañada de crema huancaína, con zarza criolla.",
+                "en": "Hand-cut beef, boiled egg, and olives. Topped with huancaína cream, served with zarza criolla.",
+                "pt": "Filé cortado na faca, ovo cozido e azeitonas. Banhada com creme huancaína, com zarza criolla.",
+                "ru": "Вырезка, рубленая ножом, вареное яйцо и оливки. Полито соусом crema huancaína, с zarza criolla."
+              },
+              "price": 28000,
+              "currency": "ARS",
+              "ingredients": [
+                "papa",
+                "lomo",
+                "huevo",
+                "aceitunas",
+                "crema huancaína",
+                "zarza criolla"
+              ],
+              "allergens": [
+                "lactosa",
+                "gluten"
+              ],
               "diet_tags": [],
               "spicy": false
             },
             {
               "id": "cusco_tradicion",
-              "name": { "es": "Cusco y Tradición", "en": "Cusco & Tradition", "pt": "Cusco e Tradição", "ru": "Куско и Традиция" },
+              "name": {
+                "es": "Cusco y Tradición",
+                "en": "Cusco and Tradition",
+                "pt": "Cusco e Tradição",
+                "ru": "Куско и традиции"
+              },
               "description": {
                 "es": "Choclo cusqueño con queso a la parrilla y salsa huancaína.",
-                "en": "Cusco corn with grilled cheese and huancaína sauce.",
-                "pt": "Milho cuzquenho com queijo grelhado e molho huancaína.",
-                "ru": "Кукуруза из Куско с жареным сыром и соусом уанкаина."
-              },
-              "price": 28000,
-              "currency": "ARS",
-              "ingredients": ["choclo cusqueño", "queso andino", "salsa huancaína"],
-              "allergens": ["lactosa"],
-              "diet_tags": ["vegetariano"],
-              "spicy": false
-            },
-            {
-              "id": "papa_rellena",
-              "name": { "es": "Papa Rellena", "en": "Stuffed Potato", "pt": "Batata Recheada", "ru": "Фаршированный картофель" },
-              "description": {
-                "es": "Lomo cortado a cuchillo, huevo cocido y aceitunas. Bañada de crema huancaína, con zarza criolla.",
-                "en": "Knife-cut beef, hard-boiled egg and olives. Drizzled with huancaína cream and criolla salsa.",
-                "pt": "Carne cortada na faca, ovo cozido e azeitonas. Banhada com creme huancaína e salsa criolla.",
-                "ru": "Говядина нарезная, вареное яйцо и оливки. Политый сливками уанкаина с креольской сальсой."
+                "en": "Choclo cusqueño with grilled cheese and salsa huancaína.",
+                "pt": "Choclo cusqueño com queijo grelhado e molho huancaína.",
+                "ru": "Choclo cusqueño с сыром на гриле и salsa huancaína."
               },
               "price": 10000,
               "currency": "ARS",
-              "ingredients": ["papa", "lomo vacuno", "huevo", "aceitunas", "salsa huancaína", "cebolla morada", "tomate"],
-              "allergens": ["lactosa"],
-              "diet_tags": [],
+              "ingredients": [
+                "choclo cusqueño",
+                "queso",
+                "salsa huancaína"
+              ],
+              "allergens": [
+                "lactosa"
+              ],
+              "diet_tags": [
+                "vegetariano"
+              ],
               "spicy": false
-            },
-            {
-              "id": "papas_huancaina",
-              "name": { "es": "Papas a la Huancaína", "en": "Huancaína Potatoes", "pt": "Batatas Huancaína", "ru": "Картофель по-уанкайнски" },
-              "description": {
-                "es": "Papas, ají amarillo, huevo cocido, aceituna y queso andino frito.",
-                "en": "Potatoes, yellow chili, hard-boiled egg, olive and fried Andean cheese.",
-                "pt": "Batatas, ají amarelo, ovo cozido, azeitona e queijo andino frito.",
-                "ru": "Картофель, желтый перец, вареное яйцо, оливки и жареный андский сыр."
-              },
-              "price": 8500,
-              "currency": "ARS",
-              "ingredients": ["papa", "ají amarillo", "huevo", "aceituna", "queso andino"],
-              "allergens": ["lactosa"],
-              "diet_tags": ["vegetariano", "sin_gluten"],
-              "spicy": false
-            },
-            {
-              "id": "anticucho",
-              "name": { "es": "Anticucho", "en": "Anticucho", "pt": "Anticucho", "ru": "Антикучо" },
-              "description": {
-                "es": "Corazón de res en salsa anticuchera y chimichurri andino. Con guarnición de papas andinas doradas, queso fresco, choclo a la parrilla y salsa huancaína.",
-                "en": "Beef heart in anticucho sauce and Andean chimichurri. With golden Andean potatoes, fresh cheese, grilled corn and huancaína sauce.",
-                "pt": "Coração bovino em molho anticuchero e chimichurri andino. Com batatas andinas douradas, queijo fresco, milho grelhado e molho huancaína.",
-                "ru": "Говяжье сердце в соусе антикучо и андском чимичурри. С золотистым картофелем, свежим сыром, жареной кукурузой и соусом уанкаина."
-              },
-              "price": 28000,
-              "currency": "ARS",
-              "ingredients": ["corazón de res", "salsa anticuchera", "papa andina", "queso fresco", "choclo"],
-              "allergens": [],
-              "diet_tags": [],
-              "spicy": true
             }
           ]
         },
         {
-          "id": "caldos",
-          "name": { "es": "Caldos de Mi Perú", "en": "Broths from Peru", "pt": "Caldos do Meu Peru", "ru": "Бульоны Моего Перу" },
-          "description": { "es": "", "en": "", "pt": "", "ru": "" },
+          "id": "empanadas_y_anticucho",
+          "name": {
+            "es": "Empanadas y anticucho",
+            "en": "Empanadas and Anticucho",
+            "pt": "Empanadas e anticucho",
+            "ru": "Эмпанадас и anticucho"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
           "items": [
             {
-              "id": "caldo_gallina",
-              "name": { "es": "Caldo de Gallina", "en": "Hen Broth", "pt": "Caldo de Galinha", "ru": "Бульон из курицы" },
+              "id": "empanada_lomo_saltado",
+              "name": {
+                "es": "Empanada de Lomo Saltado",
+                "en": "Empanada de Lomo Saltado",
+                "pt": "Empanada de Lomo Saltado",
+                "ru": "Empanada de Lomo Saltado"
+              },
               "description": {
-                "es": "Contundente sabor criollo, papa amarilla peruana, huevo cocido y fideos.",
-                "en": "Rich Creole flavor, Peruvian yellow potato, hard-boiled egg and noodles.",
-                "pt": "Sabor criollo contundente, batata amarela peruana, ovo cozido e macarrão.",
-                "ru": "Насыщенный креольский вкус, перуанский желтый картофель, вареное яйцо и лапша."
+                "es": "Tomate, cebolla, cilantro, ají amarillo. Acompañado de salsa huancaína.",
+                "en": "Tomato, onion, cilantro, ají amarillo. Served with salsa huancaína.",
+                "pt": "Tomate, cebola, coentro, ají amarillo. Acompanhado de molho huancaína.",
+                "ru": "Помидор, лук, кинза, ají amarillo. Подается с salsa huancaína."
               },
               "price": 8500,
               "currency": "ARS",
-              "ingredients": ["gallina", "papa amarilla", "huevo", "fideos", "apio", "poro"],
-              "allergens": ["gluten"],
-              "diet_tags": [],
-              "spicy": false
-            },
-            {
-              "id": "chupe_langostinos",
-              "name": { "es": "Chupe de Langostinos", "en": "Prawn Chupe", "pt": "Chupe de Camarões", "ru": "Чупе из лангустинов" },
-              "description": {
-                "es": "Langostinos, queso fresco, choclo peruano, arroz.",
-                "en": "Prawns, fresh cheese, Peruvian corn, rice.",
-                "pt": "Camarões, queijo fresco, milho peruano, arroz.",
-                "ru": "Лангустины, свежий сыр, перуанская кукуруза, рис."
-              },
-              "price": 30000,
-              "currency": "ARS",
-              "ingredients": ["langostinos", "queso fresco", "choclo", "arroz", "papa", "leche"],
-              "allergens": ["crustáceos", "lactosa"],
-              "diet_tags": [],
-              "spicy": false
-            },
-            {
-              "id": "sopa_wantan",
-              "name": { "es": "Sopa Wantán", "en": "Wonton Soup", "pt": "Sopa Wonton", "ru": "Суп Вонтон" },
-              "description": {
-                "es": "Caldo de pollo con sabor oriental acompañado de fideo ramen, verduras y wantán relleno de pollo chifero.",
-                "en": "Chicken broth with Eastern flair, ramen noodles, vegetables and chicken-stuffed wontons.",
-                "pt": "Caldo de frango com sabor oriental acompanhado de macarrão ramen, verduras e wonton recheado de frango.",
-                "ru": "Куриный бульон с восточным вкусом, лапша рамен, овощи и вонтоны с курицей."
-              },
-              "price": 8500,
-              "currency": "ARS",
-              "ingredients": ["pollo", "fideo ramen", "verduras", "wantán", "jengibre", "salsa de soja"],
-              "allergens": ["gluten", "soja"],
+              "ingredients": [
+                "carne de lomo",
+                "tomate",
+                "cebolla",
+                "cilantro",
+                "ají amarillo",
+                "salsa huancaína"
+              ],
+              "allergens": [
+                "gluten",
+                "lactosa"
+              ],
               "diet_tags": [],
               "spicy": false
             },
             {
               "id": "empanada_seco_cordero",
-              "name": { "es": "Empanada de Seco de Cordero", "en": "Lamb Stew Empanada", "pt": "Empanada de Seco de Cordeiro", "ru": "Эмпанада с тушеной бараниной" },
+              "name": {
+                "es": "Empanada de Seco de Cordero",
+                "en": "Empanada de Seco de Cordero",
+                "pt": "Empanada de Seco de Cordero",
+                "ru": "Empanada de Seco de Cordero"
+              },
               "description": {
                 "es": "Cordero patagónico lentamente cocido en chicha de jora y sabor criollo.",
-                "en": "Patagonian lamb slowly cooked in chicha de jora and Creole spices.",
-                "pt": "Cordeiro patagônico cozido lentamente em chicha de jora e sabor criollo.",
-                "ru": "Патагонская баранина, медленно тушеная в чиче де хора с креольскими специями."
+                "en": "Patagonian lamb slowly cooked in chicha de jora and criollo flavor.",
+                "pt": "Cordeiro patagônico lentamente cozido em chicha de jora e sabor criollo.",
+                "ru": "Патагонская ягнятина, медленно томленная в chicha de jora, с вкусом criollo."
               },
-              "price": 26000,
+              "price": 8500,
               "currency": "ARS",
-              "ingredients": ["cordero", "chicha de jora", "cilantro", "cebolla", "ají amarillo"],
-              "allergens": ["gluten"],
+              "ingredients": [
+                "cordero patagónico",
+                "chicha de jora",
+                "cilantro",
+                "cebolla"
+              ],
+              "allergens": [
+                "gluten"
+              ],
               "diet_tags": [],
               "spicy": false
             },
             {
-              "id": "empanada_aji_gallina",
-              "name": { "es": "Empanada de Ají de Gallina", "en": "Ají de Gallina Empanada", "pt": "Empanada de Ají de Gallina", "ru": "Эмпанада с курицей в ахи" },
+              "id": "anticucho",
+              "name": {
+                "es": "Anticucho",
+                "en": "Anticucho",
+                "pt": "Anticucho",
+                "ru": "Anticucho"
+              },
               "description": {
-                "es": "Pollo deshilachado, ají amarillo, leche evaporada, aceituna, huevo cocido. Servido con chalaquita.",
-                "en": "Shredded chicken, yellow chili, evaporated milk, olive, hard-boiled egg. Served with chalaquita salad.",
-                "pt": "Frango desfiado, ají amarelo, leite evaporado, azeitona, ovo cozido. Servido com salada chalaquita.",
-                "ru": "Тертая курица, желтый перец, сгущенное молоко, оливки, вареное яйцо. С салатом чалакита."
+                "es": "Corazón de res en salsa anticuchera y chimichurri andino. Con papas andinas doradas, queso fresco, choclo a la parrilla y salsa huancaína.",
+                "en": "Beef heart in salsa anticuchera and Andean chimichurri. Served with golden Andean potatoes, queso fresco, grilled choclo, and salsa huancaína.",
+                "pt": "Coração bovino em molho anticuchera e chimichurri andino. Com batatas andinas douradas, queijo fresco, choclo grelhado e molho huancaína.",
+                "ru": "Говяжье сердце в salsa anticuchera и андском чимичурри. С золотистым андским картофелем, свежим сыром, choclo на гриле и salsa huancaína."
+              },
+              "price": 26000,
+              "currency": "ARS",
+              "ingredients": [
+                "corazón de res",
+                "salsa anticuchera",
+                "chimichurri andino",
+                "papas andinas",
+                "queso fresco",
+                "choclo",
+                "salsa huancaína"
+              ],
+              "allergens": [
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caldos",
+      "name": {
+        "es": "Caldos de Mi Perú",
+        "en": "Broths of My Peru",
+        "pt": "Caldos do Meu Peru",
+        "ru": "Бульоны моего Перу"
+      },
+      "subcategories": [
+        {
+          "id": "caldos_peruanos",
+          "name": {
+            "es": "Caldos y sopas",
+            "en": "Broths and soups",
+            "pt": "Caldos e sopas",
+            "ru": "Супы и бульоны"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "caldo_gallina",
+              "name": {
+                "es": "Caldo de Gallina",
+                "en": "Caldo de Gallina",
+                "pt": "Caldo de Gallina",
+                "ru": "Caldo de Gallina"
+              },
+              "description": {
+                "es": "Contundente sabor criollo, papa amarilla peruana, huevo cocido y fideos.",
+                "en": "Hearty criollo flavor, Peruvian papa amarilla, boiled egg, and noodles.",
+                "pt": "Sabor criollo marcante, papa amarilla peruana, ovo cozido e macarrão.",
+                "ru": "Насыщенный вкус criollo, перуанский papa amarilla, вареное яйцо и лапша."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "gallina",
+                "papa amarilla",
+                "huevo",
+                "fideos"
+              ],
+              "allergens": [
+                "gluten"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "sopa_wantan",
+              "name": {
+                "es": "Sopa Wantán",
+                "en": "Sopa Wantán",
+                "pt": "Sopa Wantán",
+                "ru": "Sopa Wantán"
+              },
+              "description": {
+                "es": "Caldo de pollo con sabor oriental acompañado de fideo ramen, verduras y wantán relleno de pollo chifero.",
+                "en": "Chicken broth with oriental flavor accompanied by ramen noodles, vegetables, and wantán stuffed with chifa-style chicken.",
+                "pt": "Caldo de frango com sabor oriental acompanhado de macarrão ramen, legumes e wantán recheado com frango chifero.",
+                "ru": "Куриный бульон с восточным вкусом в сопровождении лапши рамен, овощей и wantán с начинкой из курицы chifero."
+              },
+              "price": 28000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "fideo ramen",
+                "verduras",
+                "wantán"
+              ],
+              "allergens": [
+                "gluten",
+                "soja"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "chupe_langostinos",
+              "name": {
+                "es": "Chupe de Langostinos",
+                "en": "Chupe de Langostinos",
+                "pt": "Chupe de Langostinos",
+                "ru": "Chupe de Langostinos"
+              },
+              "description": {
+                "es": "Langostinos, queso fresco, choclo peruano, arroz.",
+                "en": "Shrimp, queso fresco, Peruvian choclo, rice.",
+                "pt": "Lagostins, queijo fresco, choclo peruano, arroz.",
+                "ru": "Креветки, свежий сыр, перуанский choclo, рис."
               },
               "price": 33000,
               "currency": "ARS",
-              "ingredients": ["pollo", "ají amarillo", "leche evaporada", "aceituna", "huevo", "pan de molde"],
-              "allergens": ["gluten", "lactosa"],
+              "ingredients": [
+                "langostinos",
+                "queso fresco",
+                "choclo peruano",
+                "arroz"
+              ],
+              "allergens": [
+                "crustáceos",
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        },
+        {
+          "id": "caldos_marinos",
+          "name": {
+            "es": "Caldos marinos",
+            "en": "Seafood broths",
+            "pt": "Caldos marinhos",
+            "ru": "Морские бульоны"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "sudado_pescado",
+              "name": {
+                "es": "Sudado de Pescado",
+                "en": "Sudado de Pescado",
+                "pt": "Sudado de Pescado",
+                "ru": "Sudado de Pescado"
+              },
+              "description": {
+                "es": "Pesca del día entera, cebolla morada, tomates, ají amarillo, limón. Acompañado de yuca y arroz.",
+                "en": "Whole catch of the day, red onion, tomatoes, ají amarillo, lime. Served with yuca and rice.",
+                "pt": "Peixe do dia inteiro, cebola roxa, tomates, ají amarillo, limão. Acompanhado de mandioca e arroz.",
+                "ru": "Целая рыба дня, красный лук, помидоры, ají amarillo, лимон. Подается с yuca и рисом."
+              },
+              "price": 35000,
+              "currency": "ARS",
+              "ingredients": [
+                "pesca del día",
+                "cebolla morada",
+                "tomate",
+                "ají amarillo",
+                "limón",
+                "yuca",
+                "arroz"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "parihuela_cangrejo",
+              "name": {
+                "es": "Parihuela de Cangrejo",
+                "en": "Parihuela de Cangrejo",
+                "pt": "Parihuela de Cangrejo",
+                "ru": "Parihuela de Cangrejo"
+              },
+              "description": {
+                "es": "Consistente caldo de cangrejo y mariscos con yuca y arroz.",
+                "en": "Hearty crab and seafood broth with yuca and rice.",
+                "pt": "Caldo consistente de caranguejo e frutos do mar com mandioca e arroz.",
+                "ru": "Густой бульон из краба и морепродуктов с yuca и рисом."
+              },
+              "price": 38000,
+              "currency": "ARS",
+              "ingredients": [
+                "cangrejo",
+                "mariscos",
+                "yuca",
+                "arroz"
+              ],
+              "allergens": [
+                "crustáceos",
+                "moluscos"
+              ],
               "diet_tags": [],
               "spicy": false
             }
@@ -185,45 +426,1376 @@
     },
     {
       "id": "siwichis",
-      "image": "https://images.unsplash.com/photo-1535400875775-936e8e170b7c?w=600&h=250&fit=crop",
-      "name": { "es": "Siwichis", "en": "Ceviches", "pt": "Cevicheria", "ru": "Севиче" },
+      "name": {
+        "es": "Siwichis / Ceviches",
+        "en": "Siwichis / Ceviches",
+        "pt": "Siwichis / Ceviches",
+        "ru": "Siwichis / Ceviches"
+      },
       "subcategories": [
         {
           "id": "ceviches",
-          "name": { "es": "Ceviches", "en": "Ceviches", "pt": "Cevicheria", "ru": "Севиче" },
-          "description": { "es": "", "en": "", "pt": "", "ru": "" },
+          "name": {
+            "es": "Ceviches",
+            "en": "Ceviches",
+            "pt": "Ceviches",
+            "ru": "Ceviches"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
           "items": [
             {
+              "id": "ceviche_winay",
+              "name": {
+                "es": "Ceviche Wiñay",
+                "en": "Ceviche Wiñay",
+                "pt": "Ceviche Wiñay",
+                "ru": "Ceviche Wiñay"
+              },
+              "description": {
+                "es": "Ceviche súper clásico, jugo de limón, choclo peruano, maíz chulpi y boniato.",
+                "en": "Super classic Ceviche, lime juice, Peruvian choclo, chulpi corn, and sweet potato.",
+                "pt": "Ceviche superclássico, suco de limão, choclo peruano, maíz chulpi e boniato.",
+                "ru": "Супер классический Ceviche, лимонный сок, choclo peruano, maíz chulpi и батат."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "pesca del día",
+                "limón",
+                "choclo peruano",
+                "maíz chulpi",
+                "boniato"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [
+                "sin_gluten",
+                "sin_lactosa"
+              ],
+              "spicy": false
+            },
+            {
               "id": "ceviche_uchu",
-              "name": { "es": "Ceviche Uchu", "en": "Ceviche Uchu", "pt": "Ceviche Uchu", "ru": "Севиче Уку" },
+              "name": {
+                "es": "Ceviche Uchu",
+                "en": "Ceviche Uchu",
+                "pt": "Ceviche Uchu",
+                "ru": "Ceviche Uchu"
+              },
               "description": {
                 "es": "Ceviche carretillero, pesca del día, ají amarillo y chicharrón de rabas.",
-                "en": "Street-style ceviche, catch of the day, yellow chili and crispy squid rings.",
-                "pt": "Ceviche estilo rua, peixe do dia, ají amarelo e chicharrón de lulas.",
-                "ru": "Уличный севиче, рыба дня, желтый перец и жареные кольца кальмара."
+                "en": "Carretillero Ceviche, catch of the day, ají amarillo, and squid chicharrón.",
+                "pt": "Ceviche carretillero, pesca do dia, ají amarillo e chicharrón de rabas.",
+                "ru": "Ceviche carretillero, улов дня, ají amarillo и chicharrón de rabas."
               },
               "price": 35000,
               "currency": "ARS",
-              "ingredients": ["pesca del día", "ají amarillo", "limón", "cebolla morada", "chicharrón de rabas", "choclo", "cancha"],
-              "allergens": ["pescado", "mariscos", "gluten"],
-              "diet_tags": ["sin_lactosa"],
+              "ingredients": [
+                "pesca del día",
+                "ají amarillo",
+                "chicharrón de rabas"
+              ],
+              "allergens": [
+                "pescado",
+                "mariscos"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
               "spicy": true
             },
             {
-              "id": "ceviche_winay",
-              "name": { "es": "Ceviche Wiñay", "en": "Ceviche Wiñay", "pt": "Ceviche Wiñay", "ru": "Севиче Виньяй" },
-              "description": {
-                "es": "Ceviche súper clásico, jugo de limón, choclo peruano, maíz chulpi y boniato.",
-                "en": "Super classic ceviche, lime juice, Peruvian corn, chulpi corn and sweet potato.",
-                "pt": "Ceviche super clássico, suco de limão, milho peruano, milho chulpi e batata doce.",
-                "ru": "Классический севиче, сок лайма, перуанская кукуруза, чульпи и батат."
+              "id": "ceviche_nikkei",
+              "name": {
+                "es": "Ceviche Nikkei",
+                "en": "Ceviche Nikkei",
+                "pt": "Ceviche Nikkei",
+                "ru": "Ceviche Nikkei"
               },
-              "price": 38000,
+              "description": {
+                "es": "Pesca del día bañada con leche de tigre oriental, acompañada con palta fresca.",
+                "en": "Catch of the day bathed in Asian leche de tigre, served with fresh avocado.",
+                "pt": "Pesca do dia banhada com leche de tigre oriental, acompanhada com abacate fresco.",
+                "ru": "Улов дня под leche de tigre oriental, подается со свежим авокадо."
+              },
+              "price": 33000,
               "currency": "ARS",
-              "ingredients": ["pesca del día", "limón", "cebolla morada", "ají amarillo", "choclo", "maíz chulpi", "boniato"],
-              "allergens": ["pescado"],
-              "diet_tags": ["sin_gluten", "sin_lactosa"],
+              "ingredients": [
+                "pesca del día",
+                "leche de tigre oriental",
+                "palta"
+              ],
+              "allergens": [
+                "pescado",
+                "soja"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
               "spicy": false
+            }
+          ]
+        },
+        {
+          "id": "tiraditos",
+          "name": {
+            "es": "Tiraditos y especialidades",
+            "en": "Tiraditos and Specialties",
+            "pt": "Tiraditos e especialidades",
+            "ru": "Tiraditos и фирменные блюда"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "tiradito_tikka",
+              "name": {
+                "es": "Tiradito Tikka",
+                "en": "Tiradito Tikka",
+                "pt": "Tiradito Tikka",
+                "ru": "Tiradito Tikka"
+              },
+              "description": {
+                "es": "Delicadas rosas de pescado en nuestra salsa de tiradito nikkei.",
+                "en": "Delicate fish roses in our Nikkei tiradito sauce.",
+                "pt": "Delicadas rosas de peixe em nosso molho de tiradito nikkei.",
+                "ru": "Нежные розы из рыбы в нашем соусе tiradito nikkei."
+              },
+              "price": 26000,
+              "currency": "ARS",
+              "ingredients": [
+                "pescado",
+                "salsa de tiradito nikkei"
+              ],
+              "allergens": [
+                "pescado",
+                "soja"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": false
+            },
+            {
+              "id": "tiradito_vinicunca",
+              "name": {
+                "es": "Tiradito Vinicunca",
+                "en": "Tiradito Vinicunca",
+                "pt": "Tiradito Vinicunca",
+                "ru": "Tiradito Vinicunca"
+              },
+              "description": {
+                "es": "Coloridas láminas de pescado en salsa de tiradito de ají amarillo.",
+                "en": "Colorful fish slices in ají amarillo tiradito sauce.",
+                "pt": "Coloridas lâminas de peixe em molho de tiradito de ají amarillo.",
+                "ru": "Яркие ломтики рыбы в соусе tiradito de ají amarillo."
+              },
+              "price": 26000,
+              "currency": "ARS",
+              "ingredients": [
+                "pescado",
+                "ají amarillo"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": true
+            },
+            {
+              "id": "bandera_catedral",
+              "name": {
+                "es": "Bandera Catedral",
+                "en": "Bandera Catedral",
+                "pt": "Bandera Catedral",
+                "ru": "Bandera Catedral"
+              },
+              "description": {
+                "es": "Mixtura de mariscos, pesca del día al ají amarillo.",
+                "en": "Seafood mixture, catch of the day with ají amarillo.",
+                "pt": "Mistura de frutos do mar, pesca do dia ao ají amarillo.",
+                "ru": "Ассорти из морепродуктов, улов дня с ají amarillo."
+              },
+              "price": 29000,
+              "currency": "ARS",
+              "ingredients": [
+                "mariscos",
+                "pesca del día",
+                "ají amarillo"
+              ],
+              "allergens": [
+                "pescado",
+                "mariscos"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elxires",
+      "name": {
+        "es": "Elxires Reconstituyentes Peruanos",
+        "en": "Peruvian Restorative Elixirs",
+        "pt": "Elixires Reconstituintes Peruanos",
+        "ru": "Перуанские восстанавливающие эликсиры"
+      },
+      "subcategories": [
+        {
+          "id": "leches_de_tigre",
+          "name": {
+            "es": "Leches de tigre",
+            "en": "Leches de tigre",
+            "pt": "Leches de tigre",
+            "ru": "Leches de tigre"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "uchu_leche_tigre",
+              "name": {
+                "es": "Uchu Leche de Tigre",
+                "en": "Uchu Leche de Tigre",
+                "pt": "Uchu Leche de Tigre",
+                "ru": "Uchu Leche de Tigre"
+              },
+              "description": {
+                "es": "De ají amarillo con chicharrón de rabas.",
+                "en": "Ají amarillo with squid chicharrón.",
+                "pt": "De ají amarillo com chicharrón de rabas.",
+                "ru": "Из ají amarillo с chicharrón de rabas."
+              },
+              "price": 26000,
+              "currency": "ARS",
+              "ingredients": [
+                "ají amarillo",
+                "chicharrón de rabas"
+              ],
+              "allergens": [
+                "mariscos"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": true
+            },
+            {
+              "id": "winay_leche_tigre",
+              "name": {
+                "es": "Wiñay Leche de Tigre",
+                "en": "Wiñay Leche de Tigre",
+                "pt": "Wiñay Leche de Tigre",
+                "ru": "Wiñay Leche de Tigre"
+              },
+              "description": {
+                "es": "Tradicional.",
+                "en": "Traditional.",
+                "pt": "Tradicional.",
+                "ru": "Традиционный."
+              },
+              "price": 24000,
+              "currency": "ARS",
+              "ingredients": [
+                "leche de tigre"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": false
+            },
+            {
+              "id": "rucutu_leche_tigre",
+              "name": {
+                "es": "Rucutu Leche de Tigre",
+                "en": "Rucutu Leche de Tigre",
+                "pt": "Rucutu Leche de Tigre",
+                "ru": "Rucutu Leche de Tigre"
+              },
+              "description": {
+                "es": "De rocoto con chicharrón de pescado.",
+                "en": "Rocoto with fish chicharrón.",
+                "pt": "De rocoto com chicharrón de peixe.",
+                "ru": "Из rocoto с chicharrón de pescado."
+              },
+              "price": 26000,
+              "currency": "ARS",
+              "ingredients": [
+                "rocoto",
+                "chicharrón de pescado"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "causas",
+      "name": {
+        "es": "Kaws aay / Causas",
+        "en": "Kaws aay / Causas",
+        "pt": "Kaws aay / Causas",
+        "ru": "Kaws aay / Causas"
+      },
+      "subcategories": [
+        {
+          "id": "causas",
+          "name": {
+            "es": "Causas",
+            "en": "Causas",
+            "pt": "Causas",
+            "ru": "Causas"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "tesoro_vida",
+              "name": {
+                "es": "Tesoro de Vida",
+                "en": "Tesoro de Vida",
+                "pt": "Tesoro de Vida",
+                "ru": "Tesoro de Vida"
+              },
+              "description": {
+                "es": "Papa prensada, jugo de limón, ají amarillo, pollo deshilachado, mayonesa y palta.",
+                "en": "Pressed potato, lime juice, ají amarillo, shredded chicken, mayonnaise, and avocado.",
+                "pt": "Batata prensada, suco de limão, ají amarillo, frango desfiado, maionese e abacate.",
+                "ru": "Толченый картофель, лимонный сок, ají amarillo, измельченная курица, майонез и авокадо."
+              },
+              "price": 25000,
+              "currency": "ARS",
+              "ingredients": [
+                "papa",
+                "limón",
+                "ají amarillo",
+                "pollo",
+                "mayonesa",
+                "palta"
+              ],
+              "allergens": [
+                "huevo"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "orgullo_mar",
+              "name": {
+                "es": "Orgullo de Nuestro Mar",
+                "en": "Orgullo de Nuestro Mar",
+                "pt": "Orgullo de Nuestro Mar",
+                "ru": "Orgullo de Nuestro Mar"
+              },
+              "description": {
+                "es": "Papa prensada, cubierta en salsa de mariscos, rellena de palta.",
+                "en": "Pressed potato, covered in seafood sauce, stuffed with avocado.",
+                "pt": "Batata prensada, coberta com molho de frutos do mar, recheada com abacate.",
+                "ru": "Толченый картофель под соусом из морепродуктов, с начинкой из авокадо."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "papa",
+                "salsa de mariscos",
+                "palta"
+              ],
+              "allergens": [
+                "mariscos"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": false
+            },
+            {
+              "id": "esencia_libertad",
+              "name": {
+                "es": "Esencia de la Libertad",
+                "en": "Esencia de la Libertad",
+                "pt": "Esencia de la Libertad",
+                "ru": "Esencia de la Libertad"
+              },
+              "description": {
+                "es": "Papa prensada cubierta de un ceviche clásico, rellena de palta.",
+                "en": "Pressed potato covered with classic ceviche, stuffed with avocado.",
+                "pt": "Batata prensada coberta por um ceviche clássico, recheada com abacate.",
+                "ru": "Толченый картофель с классическим Ceviche сверху, с начинкой из авокадо."
+              },
+              "price": 33000,
+              "currency": "ARS",
+              "ingredients": [
+                "papa",
+                "ceviche clásico",
+                "palta"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "platos_de_fondo",
+      "name": {
+        "es": "Platos de fondo",
+        "en": "Main Courses",
+        "pt": "Pratos principais",
+        "ru": "Основные блюда"
+      },
+      "subcategories": [
+        {
+          "id": "pollos",
+          "name": {
+            "es": "Pollos",
+            "en": "Chicken",
+            "pt": "Frangos",
+            "ru": "Курица"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "pollo_entero",
+              "name": {
+                "es": "Pollo entero",
+                "en": "Whole chicken",
+                "pt": "Frango inteiro",
+                "ru": "Целая курица"
+              },
+              "description": {
+                "es": "Pollo entero con crocantes papas fritas y ensalada fresca.",
+                "en": "Whole chicken with crispy French fries and fresh salad.",
+                "pt": "Frango inteiro com batatas fritas crocantes e salada fresca.",
+                "ru": "Целая курица с хрустящим картофелем фри и свежим салатом."
+              },
+              "price": 42000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "papas fritas",
+                "ensalada"
+              ],
+              "allergens": [],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "pollo_broaster",
+              "name": {
+                "es": "Pollo Broaster - 1/2 Pollo",
+                "en": "Broaster Chicken - 1/2 Chicken",
+                "pt": "Pollo Broaster - 1/2 Frango",
+                "ru": "Pollo Broaster - 1/2 курицы"
+              },
+              "description": {
+                "es": "Pollo broaster.",
+                "en": "Broaster chicken.",
+                "pt": "Pollo broaster.",
+                "ru": "Pollo broaster."
+              },
+              "price": 33500,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo"
+              ],
+              "allergens": [
+                "gluten"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "salchipollo_broaster",
+              "name": {
+                "es": "Salchipollo Broaster",
+                "en": "Salchipollo Broaster",
+                "pt": "Salchipollo Broaster",
+                "ru": "Salchipollo Broaster"
+              },
+              "description": {
+                "es": "Pata deshuesada, papas fritas, salchichas y ensalada fresca.",
+                "en": "Boneless leg, French fries, sausages, and fresh salad.",
+                "pt": "Coxa desossada, batatas fritas, salsichas e salada fresca.",
+                "ru": "Филе куриного бедра, картофель фри, сосиски и свежий салат."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "papas fritas",
+                "salchichas",
+                "ensalada"
+              ],
+              "allergens": [
+                "gluten"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        },
+        {
+          "id": "parrillas",
+          "name": {
+            "es": "Parrillas",
+            "en": "Grills",
+            "pt": "Grelhados",
+            "ru": "Гриль"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "parrilla_perucha",
+              "name": {
+                "es": "Parrilla Perucha",
+                "en": "Parrilla Perucha",
+                "pt": "Parrilla Perucha",
+                "ru": "Parrilla Perucha"
+              },
+              "description": {
+                "es": "Pechuga de pollo, ojo de bife, anticucho de corazón de res, molleja, chorizo parrillero en salsa anticuchera Catedral, con papas andinas, morrón, cebolla y arroz blanco Catedral.",
+                "en": "Chicken breast, rib eye, beef heart anticucho, sweetbread, grilled chorizo in Catedral anticuchera sauce, with Andean potatoes, bell pepper, onion, and Catedral white rice.",
+                "pt": "Peito de frango, ojo de bife, anticucho de coração bovino, moela, linguiça para churrasco em molho anticuchero Catedral, com batatas andinas, pimentão, cebola e arroz branco Catedral.",
+                "ru": "Куриная грудка, ojo de bife, anticucho из говяжьего сердца, потрошки, chorizo parrillero в соусе anticuchera Catedral, с андским картофелем, болгарским перцем, луком и белым рисом Catedral."
+              },
+              "price": 50000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "ojo de bife",
+                "corazón de res",
+                "molleja",
+                "chorizo",
+                "papas andinas",
+                "morrón",
+                "cebolla",
+                "arroz"
+              ],
+              "allergens": [],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "parrilla_puerto",
+              "name": {
+                "es": "Parrilla del Puerto",
+                "en": "Parrilla del Puerto",
+                "pt": "Parrilla del Puerto",
+                "ru": "Parrilla del Puerto"
+              },
+              "description": {
+                "es": "Mix de mariscos, filet de pesca del día a la parrilla en salsa anticuchera, acompañado de yuca y ceviche de rocoto.",
+                "en": "Seafood mix, grilled catch of the day fillet in anticuchera sauce, served with yuca and rocoto ceviche.",
+                "pt": "Mix de frutos do mar, filé de peixe do dia na grelha em molho anticuchero, acompanhado de mandioca e ceviche de rocoto.",
+                "ru": "Ассорти из морепродуктов, филе рыбы дня на гриле в соусе anticuchera, подается с юкой и ceviche из rocoto."
+              },
+              "price": 60000,
+              "currency": "ARS",
+              "ingredients": [
+                "mariscos",
+                "pesca del día",
+                "salsa anticuchera",
+                "yuca",
+                "ceviche de rocoto"
+              ],
+              "allergens": [
+                "pescado",
+                "mariscos"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": true
+            }
+          ]
+        },
+        {
+          "id": "mariscos",
+          "name": {
+            "es": "Mariscos y pescados",
+            "en": "Seafood and fish",
+            "pt": "Frutos do mar e peixes",
+            "ru": "Рыба и морепродукты"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "secreto_marino",
+              "name": {
+                "es": "Secreto Marino",
+                "en": "Secreto Marino",
+                "pt": "Secreto Marino",
+                "ru": "Secreto Marino"
+              },
+              "description": {
+                "es": "Festival de mariscos flameados al pisco y arroz, con salsa de mariscos. Con un shot de leche de tigre.",
+                "en": "Seafood festival flambéed with pisco and rice, with seafood sauce. With a shot of leche de tigre.",
+                "pt": "Festival de frutos do mar flamejados ao pisco e arroz, com molho de frutos do mar. Com um shot de leche de tigre.",
+                "ru": "Микс морепродуктов, фламбированных с Pisco, и рис под соусом из морепродуктов. Подается с шотом leche de tigre."
+              },
+              "price": 39000,
+              "currency": "ARS",
+              "ingredients": [
+                "mariscos",
+                "pisco",
+                "arroz",
+                "salsa de mariscos",
+                "leche de tigre"
+              ],
+              "allergens": [
+                "mariscos",
+                "pescado"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "tesoro_mar",
+              "name": {
+                "es": "Tesoro del Mar",
+                "en": "Tesoro del Mar",
+                "pt": "Tesoro del Mar",
+                "ru": "Tesoro del Mar"
+              },
+              "description": {
+                "es": "Tacu-tacu y aderezo bañado de nuestro mix de mariscos en salsa a lo macho.",
+                "en": "Tacu-tacu and seasoning topped with our seafood mix in a lo macho sauce.",
+                "pt": "Tacu-tacu e tempero coberto com nosso mix de frutos do mar em molho a lo macho.",
+                "ru": "Tacu-tacu с соусом, политый нашим миксом из морепродуктов в соусе a lo macho."
+              },
+              "price": 40000,
+              "currency": "ARS",
+              "ingredients": [
+                "tacu-tacu",
+                "mariscos",
+                "salsa a lo macho"
+              ],
+              "allergens": [
+                "mariscos"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "misterio_mariscos",
+              "name": {
+                "es": "Misterio de Mariscos",
+                "en": "Misterio de Mariscos",
+                "pt": "Misterio de Mariscos",
+                "ru": "Misterio de Mariscos"
+              },
+              "description": {
+                "es": "Filet de pescado y mariscos salteados en salsa huancaína de la casa. Complementado con yuca y arroz.",
+                "en": "Fish fillet and sautéed seafood in house huancaína sauce. Served with yuca and rice.",
+                "pt": "Filé de peixe e frutos do mar salteados em molho huancaína da casa. Acompanhado de mandioca e arroz.",
+                "ru": "Филе рыбы и морепродукты, обжаренные в фирменном соусе Huancaína. Дополнено юкой и рисом."
+              },
+              "price": 35000,
+              "currency": "ARS",
+              "ingredients": [
+                "pescado",
+                "mariscos",
+                "salsa huancaína",
+                "yuca",
+                "arroz"
+              ],
+              "allergens": [
+                "pescado",
+                "mariscos",
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        },
+        {
+          "id": "carnes_pastas",
+          "name": {
+            "es": "Carnes, pastas y clásicos peruanos",
+            "en": "Meats, pastas, and Peruvian classics",
+            "pt": "Carnes, massas e clássicos peruanos",
+            "ru": "Мясо, паста и перуанская классика"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "lomo_saltado",
+              "name": {
+                "es": "Lomo Saltado",
+                "en": "Lomo Saltado",
+                "pt": "Lomo Saltado",
+                "ru": "Lomo Saltado"
+              },
+              "description": {
+                "es": "Lomo fino, arroz, papas andinas, cilantro, cebolla, tomate, ají amarillo.",
+                "en": "Tenderloin, rice, Andean potatoes, cilantro, onion, tomato, ají amarillo.",
+                "pt": "Filé-mignon, arroz, batatas andinas, coentro, cebola, tomate, ají amarillo.",
+                "ru": "Говяжья вырезка (lomo fino), рис, андский картофель, кинза, лук, помидоры, ají amarillo."
+              },
+              "price": 34000,
+              "currency": "ARS",
+              "ingredients": [
+                "lomo",
+                "arroz",
+                "papas andinas",
+                "cebolla",
+                "tomate",
+                "ají amarillo"
+              ],
+              "allergens": [],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "tacu_tacu_huancainero",
+              "name": {
+                "es": "Tacu-Tacu Huancainero",
+                "en": "Tacu-Tacu Huancainero",
+                "pt": "Tacu-Tacu Huancainero",
+                "ru": "Tacu-Tacu Huancainero"
+              },
+              "description": {
+                "es": "Frejol y arroz aderezado con salsa huancaína bañado con nuestro lomo saltado típico.",
+                "en": "Beans and rice seasoned with huancaína sauce, topped with our traditional lomo saltado.",
+                "pt": "Feijão e arroz temperados com molho huancaína coberto com o nosso lomo saltado típico.",
+                "ru": "Фасоль и рис, заправленные соусом Huancaína, политые нашим традиционным Lomo Saltado."
+              },
+              "price": 35000,
+              "currency": "ARS",
+              "ingredients": [
+                "frejol",
+                "arroz",
+                "salsa huancaína",
+                "lomo"
+              ],
+              "allergens": [
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "fetuccini_huancainero",
+              "name": {
+                "es": "Fetuccini Huancainero",
+                "en": "Fetuccini Huancainero",
+                "pt": "Fetuccini Huancainero",
+                "ru": "Fetuccini Huancainero"
+              },
+              "description": {
+                "es": "Fetuccini a la huancaína acompañado de lomo saltado tradicional.",
+                "en": "Fettuccine a la huancaína served with traditional lomo saltado.",
+                "pt": "Fettuccine à huancaína acompanhado de lomo saltado tradicional.",
+                "ru": "Фетучини a la Huancaína с традиционным Lomo Saltado."
+              },
+              "price": 37000,
+              "currency": "ARS",
+              "ingredients": [
+                "fetuccini",
+                "salsa huancaína",
+                "lomo saltado"
+              ],
+              "allergens": [
+                "gluten",
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        },
+        {
+          "id": "pollo_y_tradicionales",
+          "name": {
+            "es": "Cocina tradicional",
+            "en": "Traditional cuisine",
+            "pt": "Cozinha tradicional",
+            "ru": "Традиционная кухня"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "arroz_pollo",
+              "name": {
+                "es": "Arroz con Pollo",
+                "en": "Arroz con Pollo",
+                "pt": "Arroz con Pollo",
+                "ru": "Arroz con Pollo"
+              },
+              "description": {
+                "es": "Pierna de pollo cocida a baja temperatura en chicha de jora, cerveza y cilantro. Contrastado con papa a la huancaína y zarza criolla.",
+                "en": "Chicken leg slow-cooked in chicha de jora, beer, and cilantro. Paired with papa a la huancaína and zarza criolla.",
+                "pt": "Coxa de frango cozida a baixa temperatura em chicha de jora, cerveja e coentro. Acompanhada de papa a la huancaína e zarza criolla.",
+                "ru": "Куриная ножка, приготовленная при низкой температуре в chicha de jora, пиве и кинзе. Подается с papa a la huancaína и zarza criolla."
+              },
+              "price": 31000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "chicha de jora",
+                "cerveza",
+                "cilantro",
+                "papa a la huancaína",
+                "zarza criolla"
+              ],
+              "allergens": [
+                "gluten",
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "seco_cordero",
+              "name": {
+                "es": "Seco de Cordero",
+                "en": "Seco de Cordero",
+                "pt": "Seco de Cordero",
+                "ru": "Seco de Cordero"
+              },
+              "description": {
+                "es": "Cordero patagónico cocido por 12 horas en cilantro, cerveza negra y chicha de jora. En armonía con frejol y arroz.",
+                "en": "Patagonian lamb cooked for 12 hours in cilantro, dark beer, and chicha de jora. In harmony with beans and rice.",
+                "pt": "Cordeiro patagônico cozido por 12 horas em coentro, cerveja preta e chicha de jora. Em harmonia com feijão e arroz.",
+                "ru": "Патагонский ягненок, томленный 12 часов в кинзе, темном пиве и chicha de jora. В гармонии с фасолью и рисом."
+              },
+              "price": 32000,
+              "currency": "ARS",
+              "ingredients": [
+                "cordero",
+                "cilantro",
+                "cerveza negra",
+                "chicha de jora",
+                "frejol",
+                "arroz"
+              ],
+              "allergens": [
+                "gluten"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "aji_gallina",
+              "name": {
+                "es": "Ají de Gallina",
+                "en": "Ají de Gallina",
+                "pt": "Ají de Gallina",
+                "ru": "Ají de Gallina"
+              },
+              "description": {
+                "es": "Pechuga de pollo cocida en cremosa salsa de ají amarillo y leche. Con su arroz y papas.",
+                "en": "Chicken breast cooked in a creamy ají amarillo and milk sauce. Served with rice and potatoes.",
+                "pt": "Peito de frango cozido em cremoso molho de ají amarillo e leite. Com seu arroz e batatas.",
+                "ru": "Куриная грудка, приготовленная в сливочном соусе из ají amarillo и молока. С рисом и картофелем."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "ají amarillo",
+                "leche",
+                "arroz",
+                "papas"
+              ],
+              "allergens": [
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "encuentro_oriental",
+      "name": {
+        "es": "Encuentro Cultural Oriental",
+        "en": "Oriental Cultural Encounter",
+        "pt": "Encontro Cultural Oriental",
+        "ru": "Восточная культурная встреча"
+      },
+      "subcategories": [
+        {
+          "id": "chaufa",
+          "name": {
+            "es": "Arroces y chaufa",
+            "en": "Rices and Chaufa",
+            "pt": "Arrozes e chaufa",
+            "ru": "Блюда из риса и chaufa"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "chaufa_taypa",
+              "name": {
+                "es": "Chaufa Taypa",
+                "en": "Chaufa Taypa",
+                "pt": "Chaufa Taypa",
+                "ru": "Chaufa Taypa"
+              },
+              "description": {
+                "es": "Cerdo, langostinos, pollo y vegetales orientales salteados al wok con guarnición de chaufa de verduras.",
+                "en": "Pork, prawns, chicken, and oriental vegetables wok-sautéed with a side of vegetable chaufa.",
+                "pt": "Porco, camarões, frango e vegetais orientais salteados no wok com guarnição de chaufa de legumes.",
+                "ru": "Свинина, креветки, курица и восточные овощи, обжаренные в воке, с гарниром из овощного chaufa."
+              },
+              "price": 35000,
+              "currency": "ARS",
+              "ingredients": [
+                "cerdo",
+                "langostinos",
+                "pollo",
+                "vegetales",
+                "arroz"
+              ],
+              "allergens": [
+                "crustáceos",
+                "soja"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "aeropuerto",
+              "name": {
+                "es": "Aeropuerto",
+                "en": "Aeropuerto",
+                "pt": "Aeropuerto",
+                "ru": "Aeropuerto"
+              },
+              "description": {
+                "es": "Arroz frito de pollo, cerdo y lomo con verduras orientales y tallarín chifero. Coronada con tortilla de langostinos y wantán frito con salsa de tamarindo.",
+                "en": "Chicken, pork, and tenderloin fried rice with oriental vegetables and tallarín chifero. Topped with prawn omelet and fried wantán with tamarind sauce.",
+                "pt": "Arroz frito de frango, porco e lombo com legumes orientais e tallarín chifero. Coroado com omelete de camarões e wantán frito com molho de tamarindo.",
+                "ru": "Жареный рис с курицей, свининой и lomo с восточными овощами и tallarín chifero. Украшено омлетом с креветками и жареным вонтоном с соусом тамаринд."
+              },
+              "price": 33000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "cerdo",
+                "lomo",
+                "verduras",
+                "tallarín",
+                "langostinos",
+                "wantán",
+                "tamarindo"
+              ],
+              "allergens": [
+                "crustáceos",
+                "gluten",
+                "soja",
+                "huevo"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "pollo_chijaukay",
+              "name": {
+                "es": "Pollo Chijaukay",
+                "en": "Pollo Chijaukay",
+                "pt": "Pollo Chijaukay",
+                "ru": "Pollo Chijaukay"
+              },
+              "description": {
+                "es": "Pierna de pollo deshuesada bañada en salsa Catedral chijaukay, morrón y champiñones. Complementado con chaufa de verduras.",
+                "en": "Boneless chicken leg smothered in Catedral chijaukay sauce, bell pepper, and mushrooms. Complemented with vegetable chaufa.",
+                "pt": "Coxa de frango desossada banhada em molho Catedral chijaukay, pimentão e cogumelos. Acompanhado com chaufa de legumes.",
+                "ru": "Куриное филе бедра под соусом Catedral chijaukay, болгарским перцем и шампиньонами. Дополнено овощным chaufa."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "pollo",
+                "salsa chijaukay",
+                "morrón",
+                "champiñones",
+                "chaufa"
+              ],
+              "allergens": [
+                "soja"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "jaleas",
+      "name": {
+        "es": "Jaleas del Imperio",
+        "en": "Jaleas of the Empire",
+        "pt": "Jaleas del Imperio",
+        "ru": "Jaleas del Imperio"
+      },
+      "subcategories": [
+        {
+          "id": "jaleas",
+          "name": {
+            "es": "Jaleas",
+            "en": "Jaleas",
+            "pt": "Jaleas",
+            "ru": "Jaleas"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "jalea_mixta",
+              "name": {
+                "es": "Jalea Mixta",
+                "en": "Jalea Mixta",
+                "pt": "Jalea Mixta",
+                "ru": "Jalea Mixta"
+              },
+              "description": {
+                "es": "Mixtura de mariscos acompañada de salsa tártara.",
+                "en": "Seafood mix served with tartar sauce.",
+                "pt": "Mistura de frutos do mar acompanhada de molho tártaro.",
+                "ru": "Ассорти из морепродуктов с соусом тартар."
+              },
+              "price": 35000,
+              "currency": "ARS",
+              "ingredients": [
+                "mariscos",
+                "salsa tártara"
+              ],
+              "allergens": [
+                "mariscos",
+                "huevo"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "jalea_pescado",
+              "name": {
+                "es": "Jalea de Pescado",
+                "en": "Jalea de Pescado",
+                "pt": "Jalea de Pescado",
+                "ru": "Jalea de Pescado"
+              },
+              "description": {
+                "es": "Pesca del día acompañado de salsa tártara.",
+                "en": "Catch of the day served with tartar sauce.",
+                "pt": "Peixe do dia acompanhado de molho tártaro.",
+                "ru": "Рыба дня с соусом тартар."
+              },
+              "price": 30000,
+              "currency": "ARS",
+              "ingredients": [
+                "pesca del día",
+                "salsa tártara"
+              ],
+              "allergens": [
+                "pescado",
+                "huevo"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            },
+            {
+              "id": "jalea_calamar",
+              "name": {
+                "es": "Jalea de Calamar",
+                "en": "Jalea de Calamar",
+                "pt": "Jalea de Calamar",
+                "ru": "Jalea de Calamar"
+              },
+              "description": {
+                "es": "Aros de calamar acompañado de salsa tártara.",
+                "en": "Squid rings served with tartar sauce.",
+                "pt": "Anéis de lula acompanhados de molho tártaro.",
+                "ru": "Кольца кальмара с соусом тартар."
+              },
+              "price": 33000,
+              "currency": "ARS",
+              "ingredients": [
+                "calamar",
+                "salsa tártara"
+              ],
+              "allergens": [
+                "moluscos",
+                "huevo"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "travesia",
+      "name": {
+        "es": "Travesía Peruana",
+        "en": "Peruvian Journey",
+        "pt": "Travessia Peruana",
+        "ru": "Перуанское путешествие"
+      },
+      "subcategories": [
+        {
+          "id": "experiencias",
+          "name": {
+            "es": "Experiencias",
+            "en": "Experiences",
+            "pt": "Experiências",
+            "ru": "Впечатления"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "maravilla_patria",
+              "name": {
+                "es": "Maravilla Patria",
+                "en": "Maravilla Patria",
+                "pt": "Maravilla Patria",
+                "ru": "Maravilla Patria"
+              },
+              "description": {
+                "es": "Papa a la huancaína, anticucho de corazón de res, ceviche clásico, causa con mixtura de mariscos y jalea de rabas.",
+                "en": "Papa a la huancaína, beef heart anticucho, classic ceviche, causa with seafood mix, and squid ring jalea.",
+                "pt": "Papa a la huancaína, anticucho de coração bovino, ceviche clássico, causa com mistura de frutos do mar e jalea de rabas.",
+                "ru": "Papa a la huancaína, anticucho из говяжьего сердца, классический ceviche, causa с ассорти из морепродуктов и jalea de rabas."
+              },
+              "price": 42000,
+              "currency": "ARS",
+              "ingredients": [
+                "papa a la huancaína",
+                "anticucho",
+                "ceviche",
+                "causa",
+                "mariscos",
+                "jalea de rabas"
+              ],
+              "allergens": [
+                "pescado",
+                "mariscos",
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "ruta_popular",
+              "name": {
+                "es": "Ruta Popular",
+                "en": "Ruta Popular",
+                "pt": "Ruta Popular",
+                "ru": "Популярный маршрут"
+              },
+              "description": {
+                "es": "Jalea de pesca del día, causa limeña y ceviche clásico.",
+                "en": "Catch of the day jalea, causa limeña, and classic ceviche.",
+                "pt": "Jalea de peixe do dia, causa limeña e ceviche clássico.",
+                "ru": "Jalea de pesca del día, causa limeña и классический ceviche."
+              },
+              "price": 40000,
+              "currency": "ARS",
+              "ingredients": [
+                "jalea",
+                "causa limeña",
+                "ceviche"
+              ],
+              "allergens": [
+                "pescado",
+                "gluten"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": false
+            },
+            {
+              "id": "aventura_marina",
+              "name": {
+                "es": "Aventura Marina",
+                "en": "Aventura Marina",
+                "pt": "Aventura Marina",
+                "ru": "Морское приключение"
+              },
+              "description": {
+                "es": "Arroz con mariscos, mixtura huancaína, jalea de rabas y ceviche clásico.",
+                "en": "Rice with seafood, huancaína mix, squid ring jalea, and classic ceviche.",
+                "pt": "Arroz com frutos do mar, mixtura huancaína, jalea de rabas e ceviche clássico.",
+                "ru": "Arroz con mariscos, mixtura huancaína, jalea de rabas и классический ceviche."
+              },
+              "price": 45000,
+              "currency": "ARS",
+              "ingredients": [
+                "arroz",
+                "mariscos",
+                "huancaína",
+                "jalea de rabas",
+                "ceviche"
+              ],
+              "allergens": [
+                "mariscos",
+                "pescado",
+                "lactosa"
+              ],
+              "diet_tags": [],
+              "spicy": false
+            }
+          ]
+        },
+        {
+          "id": "experiencias_catedral",
+          "name": {
+            "es": "Experiencias Catedral",
+            "en": "Catedral Experiences",
+            "pt": "Experiências Catedral",
+            "ru": "Впечатления Catedral"
+          },
+          "description": {
+            "es": "",
+            "en": "",
+            "pt": "",
+            "ru": ""
+          },
+          "items": [
+            {
+              "id": "experiencia_catedral",
+              "name": {
+                "es": "Experiencia Catedral",
+                "en": "Catedral Experience",
+                "pt": "Experiência Catedral",
+                "ru": "Сет Catedral"
+              },
+              "description": {
+                "es": "Chaufa de mariscos, jalea mixta y ceviche de ají amarillo.",
+                "en": "Seafood chaufa, jalea mixta, and ají amarillo ceviche.",
+                "pt": "Chaufa de frutos do mar, jalea mixta e ceviche de ají amarillo.",
+                "ru": "Chaufa de mariscos, jalea mixta и ceviche de ají amarillo."
+              },
+              "price": 42000,
+              "currency": "ARS",
+              "ingredients": [
+                "chaufa de mariscos",
+                "jalea mixta",
+                "ceviche de ají amarillo"
+              ],
+              "allergens": [
+                "mariscos",
+                "pescado",
+                "soja"
+              ],
+              "diet_tags": [],
+              "spicy": true
+            },
+            {
+              "id": "circuito_leches_tigre",
+              "name": {
+                "es": "Circuito de Leches de Tigre",
+                "en": "Leches de Tigre Circuit",
+                "pt": "Circuito de Leches de Tigre",
+                "ru": "Сет из Leches de Tigre"
+              },
+              "description": {
+                "es": "De ají amarillo, rocoto y super clásica.",
+                "en": "With ají amarillo, rocoto, and super classic.",
+                "pt": "De ají amarillo, rocoto e super clássica.",
+                "ru": "С ají amarillo, rocoto и суперклассическая."
+              },
+              "price": 40000,
+              "currency": "ARS",
+              "ingredients": [
+                "leche de tigre",
+                "ají amarillo",
+                "rocoto"
+              ],
+              "allergens": [
+                "pescado"
+              ],
+              "diet_tags": [
+                "sin_lactosa"
+              ],
+              "spicy": true
             }
           ]
         }
