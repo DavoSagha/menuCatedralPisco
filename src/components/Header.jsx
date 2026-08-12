@@ -58,7 +58,7 @@ export default function Header({ user, role }) {
 
       <img
         className="site-header__logo"
-        src="/logo-catedral.jpg"
+        src="/logo-catedral-texto.png"
         alt="La Catedral del Pisco"
       />
 

@@ -205,7 +205,7 @@ app.post('/api/chat', async (req, res) => {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-3.5-flash-lite',
         max_tokens: 512,
         messages: [
           { role: 'system', content: systemPrompt },

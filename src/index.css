@@ -50,6 +50,18 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  /*
+    overflow-y: scroll → el navegador SIEMPRE reserva el espacio de la barra
+    de desplazamiento, aunque la página no la necesite todavía.
+    Esto evita el "layout shift" clásico: cuando se abre una categoría y la
+    página pasa a ser scrolleable, la barra ya tenía su espacio asignado →
+    el body centrado y las cards no se mueven ni cambian de ancho.
+
+    scrollbar-gutter: stable → versión CSS moderna del mismo efecto
+    (redundancia intencional para máxima compatibilidad).
+  */
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -58,6 +70,7 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   max-width: 480px;
+  width: 100%;          /* evita que el body se encoja si el viewport es menor */
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
 }
@@ -383,17 +396,18 @@ body.no-scroll {
   min-width: 0;
 }
 
-/* max-width + shrink: con los botones a 44px, en pantallas de 360px el logo
-   y los controles se peleaban el ancho. Así el logo cede y nada se rompe. */
+/* El logo de texto tiene fondo transparente y letras oscuras.
+   `invert(1) brightness(2)` las vuelve blancas/crema sobre el fondo oscuro del header. */
 .site-header__logo {
-  height: 85%;
+  height: 52px;          /* altura fija que respeta los 80px del header */
   width: auto;
-  max-width: 55%;
+  max-width: 58%;        /* cede espacio si la pantalla es muy angosta */
   min-width: 0;
   flex-shrink: 1;
   display: block;
-  border-radius: 50%;
   object-fit: contain;
+  /* invierte el negro a blanco y sube brillo al tono crema del tema */
+  filter: invert(1) brightness(1.8) sepia(0.15);
 }
 
 .site-header__actions {
@@ -742,7 +756,19 @@ body.no-scroll {
 
 .category-banner__panel-inner {
   padding: 16px 14px 12px;
+  /* Contención horizontal: el inner nunca puede ser más ancho que el panel.
+     Si un DishCard o imagen intenta crecer, se corta acá. */
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
+
+/* El grid de platos también debe estar contenido */
+.dish-grid {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 
 /* Agrupa el encabezado de una subcategoría con sus platos. Existe para que la
    grilla de dos columnas de escritorio se aplique a `.dish-grid` y no convierta
@@ -776,6 +802,11 @@ body.no-scroll {
 .dish-card {
   display: flex;
   gap: 14px;
+  /* width: 100% + box-sizing aseguran que el card nunca crezca más allá
+     del ancho de su padre, ni empuje el acordeón hacia afuera. */
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;          /* permite que el flex container se encoja */
   margin-bottom: 12px;
   padding: 14px;
   border: 1px solid var(--card-border);
@@ -956,41 +987,255 @@ body.no-scroll {
   text-transform: none;
 }
 
-.menu-footer-mark {
+/* ════════════════════════════════════════════════════════════
+   FOOTER COMPLETO — La Catedral del Pisco
+   ════════════════════════════════════════════════════════════ */
+.site-footer {
   position: relative;
-  isolation: isolate;
   width: 100%;
-  margin: 0;
-  margin-top: 24px;
-  padding: 0;
+  box-sizing: border-box;
+  margin-top: 32px;
+  padding: 0 0 env(safe-area-inset-bottom, 0);
+  background: var(--bg-secondary);
+  border-top: 1px solid rgba(212, 175, 55, 0.18);
   overflow: hidden;
-  background: var(--bg-primary);
+}
+
+/* Franja dorada decorativa superior */
+.site-footer::before {
+  content: '';
+  display: block;
+  width: 60%;
+  height: 2px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+}
+
+/* ── Logo ── */
+.site-footer__logo-wrap {
   display: flex;
-  align-items: flex-end;
   justify-content: center;
-  flex-grow: 0;
-  height: auto;
-  min-height: 140px;
+  padding: 28px 24px 16px;
 }
 
-.menu-footer-mark__watermark {
-  position: relative;
-  z-index: 0;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: bottom center;
-  pointer-events: none;
+.site-footer__logo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  opacity: 0.82;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 0 32px rgba(212, 175, 55, 0.12);
   user-select: none;
-  opacity: 0.6;
+  pointer-events: none;
 }
 
-.menu-footer-mark__content {
-  position: relative;
-  z-index: 2;
-  min-height: inherit;
+/* ── Divisor con nombre ── */
+.site-footer__divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px 24px;
 }
+
+.site-footer__divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.35));
+}
+
+.site-footer__divider-line:last-child {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.35), transparent);
+}
+
+.site-footer__divider-text {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--accent-gold);
+  white-space: nowrap;
+}
+
+/* ── Grid de bloques ── */
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0 16px 24px;
+}
+
+.site-footer__block {
+  padding: 0 10px;
+  border: none;
+}
+
+.site-footer__block + .site-footer__block {
+  border-left: 1px solid rgba(212, 175, 55, 0.10);
+}
+
+.site-footer__block-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 10px;
+}
+
+.site-footer__icon {
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.site-footer__address {
+  font-style: normal;
+  margin-bottom: 10px;
+}
+
+.site-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-footer__link:hover,
+.site-footer__link:focus-visible {
+  color: var(--accent-gold);
+}
+
+.site-footer__link:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.site-footer__hours {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* Lista de contactos */
+.site-footer__contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Botón WhatsApp */
+.site-footer__link--whatsapp {
+  color: #4CAF82;
+}
+
+.site-footer__link--whatsapp:hover {
+  color: #6FCF97;
+}
+
+.site-footer__wa-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ── Redes sociales ── */
+.site-footer__social {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(212, 175, 55, 0.10);
+  text-align: center;
+}
+
+.site-footer__social-label {
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 14px;
+}
+
+.site-footer__social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.site-footer__social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid rgba(212, 175, 55, 0.20);
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.04);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.site-footer__social-btn:hover,
+.site-footer__social-btn:focus-visible {
+  border-color: var(--accent-gold);
+  background: rgba(212, 175, 55, 0.10);
+  color: var(--accent-gold);
+}
+
+.site-footer__social-btn:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+.site-footer__social-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ── Créditos ── */
+.site-footer__credits {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px max(16px, env(safe-area-inset-bottom, 16px));
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
+}
+
+.site-footer__credits-copy {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.site-footer__credits-by {
+  font-family: var(--font-display);
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  letter-spacing: 0.04em;
+}
+
 
 /* ---- Asistente de la carta ---- */
 .chat-hint {

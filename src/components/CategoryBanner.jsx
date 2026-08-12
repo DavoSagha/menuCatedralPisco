@@ -93,6 +93,17 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
     <section
       id={`category-${category.id}`}
       className={`category-section${open ? ' is-open' : ''}`}
+      style={{
+        contain: 'layout',
+        margin: '0 10px 8px',
+        padding: 0,
+        height: 'auto',
+        overflow: 'hidden',
+        borderRadius: '12px',
+        border: '1px solid rgba(212, 175, 55, 0.10)',
+        boxShadow: '0 2px 12px rgba(0, 0, 0, 0.35)',
+        outline: 'none',
+      }}
     >
       {/* `:hover` y `:active` los resuelve el navegador. Antes esto eran dos
           `useState` y cinco handlers de puntero para pintar un brillo. */}
@@ -125,10 +136,27 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
         /* Lo único que queda inline es la altura medida: es un dato, no un
            estilo. Opacidad, pointer-events y transición los deriva el CSS
            de `.is-open`. */
-        style={{ maxHeight: open ? `${contentHeight}px` : '0px' }}
+        style={{ 
+          maxHeight: open ? `${contentHeight}px` : '0px',
+          overflow: 'hidden',
+          width: '100%',
+          boxSizing: 'border-box',
+          background: 'var(--bg-primary)',
+          borderTop: '1px solid rgba(212, 175, 55, 0.08)',
+        }}
       >
         {shouldRenderItems && (
-          <div className="category-banner__panel-inner" ref={innerRef} aria-hidden={!open}>
+          <div 
+            className="category-banner__panel-inner" 
+            ref={innerRef} 
+            aria-hidden={!open}
+            style={{
+              padding: '16px 14px 12px',
+              width: '100%',
+              boxSizing: 'border-box',
+              overflow: 'hidden'
+            }}
+          >
             {/* Los platos van envueltos en `.dish-grid` en los dos casos, con
                 subcategorías y sin ellas. Es el gancho para que en escritorio
                 pasen a dos columnas sin que el encabezado de subcategoría
@@ -166,4 +194,3 @@ export default function CategoryBanner({ category, onDishClick, open = false, on
     </section>
   )
 }
-
