@@ -7,7 +7,7 @@
     "test": "node --test",
     "dev": "concurrently -k \"vite\" \"node --env-file .env server.js\"",
     "build": "vite build",
-    "start": "node --env-file .env server.js",
+    "start": "node server.js",
     "seed": "node --env-file .env scripts/seed.js",
     "preview": "vite preview"
   },
