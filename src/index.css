@@ -1290,26 +1290,27 @@ body.no-scroll {
 .chat-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 45;
-  background: rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   animation: fadeIn 0.2s ease;
 }
 
 .chat-sheet {
   position: fixed;
   bottom: var(--chat-kb, 0);
-  left: 50%;
-  z-index: 50;
+  left: 0;
+  z-index: 9999;
   width: 100%;
-  max-width: 480px;
-  /* Con el teclado abierto, --chat-kb-max mide el área visible real (Visual
-     Viewport API) y la hoja no queda tapada ni se pasa de la pantalla. */
-  max-height: min(var(--chat-kb-max, 70dvh), 70dvh);
+  /* Drawer a pantalla completa. Con el teclado/toolbar abiertos, --chat-kb-max
+     (Visual Viewport API) mide el área visible real y la hoja queda arriba del
+     teclado sin pasarse del borde superior. */
+  height: min(var(--chat-kb-max, 100dvh), 100dvh);
   display: flex;
   flex-direction: column;
   border-radius: 16px 16px 0 0;
   background: var(--bg-primary);
-  transform: translateX(-50%);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
   animation: bottomSheetUp 0.35s ease;
 }
@@ -1363,7 +1364,7 @@ body.no-scroll {
 
 .chat-log {
   flex: 1;
-  min-height: 120px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1403,9 +1404,10 @@ body.no-scroll {
 }
 
 .chat-compose {
+  flex-shrink: 0;
   display: flex;
   gap: 8px;
-  padding: 12px 16px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--card-border);
 }
 
@@ -1910,13 +1912,14 @@ body.no-scroll {
     flex: 1;
   }
 
-  /* ---- El asistente deja de ser una hoja del piso y pasa a ser un panel ---- */
+  /* ---- El asistente deja de ser un drawer y pasa a ser un panel ---- */
   .chat-sheet {
     left: auto;
     right: 24px;
     bottom: 24px;
     width: 400px;
     max-width: none;
+    height: auto;
     max-height: min(560px, 70dvh);
     border-radius: 16px;
     transform: none;

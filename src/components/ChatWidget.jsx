@@ -146,6 +146,20 @@ export default function ChatWidget({ branchSlug }) {
     }
   }, [open])
 
+  /**
+   * Scroll lock: con el chat abierto, la página de atrás no debe moverse. El
+   * backdrop ya la tapa visualmente, pero bloquear el overflow es lo que evita
+   * el scroll fantasma y el rebote de iOS sobre el menú.
+   */
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [open])
+
   const handleSend = async () => {
     const text = input.trim()
     if (!text || loading) return
