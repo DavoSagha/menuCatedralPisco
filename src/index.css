@@ -1297,18 +1297,19 @@ body.no-scroll {
 
 .chat-sheet {
   position: fixed;
-  /* Drawer a pantalla completa. La altura sale de pinchar top (0) y bottom
-     (--chat-kb, lo que tapa el teclado según el Visual Viewport): nunca crece
-     ni se pasa del área visible. `max-height: 100dvh` agrega la capa dvh: en
-     browsers donde dvh reacciona al teclado/barra flotante, el límite baja solo
-     y el input sube automáticamente; donde no, lo cubre el valor JS de
-     --chat-kb. */
-  top: 0;
+  /* Bottom sheet nativo: anclado a los 4 bordes (inset: 0), con `bottom`
+     manejado por --chat-kb (lo que tapa el teclado según el Visual Viewport).
+     Así la altura es el 100% del área visible con teclado cerrado y se recorta
+     automáticamente cuando el teclado sube. No se usa height:100dvh a la vez:
+     si top y height están seteados, CSS descarta `bottom` y el input volvería
+     a quedar tapado por el teclado. */
+  inset: 0;
   bottom: var(--chat-kb, 0);
-  left: 0;
   z-index: 9999;
-  width: 100%;
-  max-height: 100dvh;
+  width: 100vw;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   border-radius: 16px 16px 0 0;
@@ -1318,6 +1319,7 @@ body.no-scroll {
 }
 
 .chat-sheet__head {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1372,8 +1374,9 @@ body.no-scroll {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 12px 16px;
+  padding: 16px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
 }
 
@@ -1409,14 +1412,15 @@ body.no-scroll {
 
 .chat-compose {
   flex-shrink: 0;
-  position: sticky;
-  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
+  align-items: center;
   gap: 8px;
   padding: 12px 16px;
   /* Con viewport-fit=cover, el home indicator de iOS flota sobre el final de
      la pantalla: este padding mantiene el input y el botón libres. */
-  padding-bottom: max(env(safe-area-inset-bottom, 16px), 12px);
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--card-border);
 }
 
@@ -1429,7 +1433,9 @@ body.no-scroll {
   background: var(--bg-secondary);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 14px;
+  /* 16px mínimo: con un tamaño menor, iOS Safari hace zoom automático al
+     enfocar el campo y rompe el encuadre del chat. */
+  font-size: 16px;
   transition: border-color 0.2s ease;
 }
 
