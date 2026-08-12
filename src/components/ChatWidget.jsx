@@ -77,6 +77,8 @@ export default function ChatWidget({ branchSlug }) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [kbOffset, setKbOffset] = useState(0)
+  const [kbMaxHeight, setKbMaxHeight] = useState(null)
   const endRef = useRef(null)
   const inputRef = useRef(null)
   const bubbleRef = useRef(null)
@@ -109,6 +111,39 @@ export default function ChatWidget({ branchSlug }) {
 
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 400)
+  }, [open])
+
+  /**
+   * Teclado en pantalla: en el celular (sobre todo iOS) el teclado NO achica el
+   * layout viewport, así que la hoja con `bottom: 0` queda tapada por abajo.
+   * El Visual Viewport API sí mide el área realmente visible: con esos valores
+   * subimos la hoja (bottom) y recortamos su altura (max-height) para que el
+   * chat quede arriba del teclado, como un chat de mensajería.
+   *
+   * En Android moderno el browser ya achica el viewport al abrir el teclado,
+   * así que la superposición calculada da 0 y no cambia nada.
+   */
+  useEffect(() => {
+    if (!open) return
+    const vv = window.visualViewport
+    if (!vv) return
+
+    const sync = () => {
+      const overlap = Math.max(0, window.innerHeight - (vv.offsetTop + vv.height))
+      setKbOffset(overlap)
+      setKbMaxHeight(vv.height)
+    }
+
+    vv.addEventListener('resize', sync)
+    vv.addEventListener('scroll', sync)
+    window.addEventListener('resize', sync)
+    sync()
+
+    return () => {
+      vv.removeEventListener('resize', sync)
+      vv.removeEventListener('scroll', sync)
+      window.removeEventListener('resize', sync)
+    }
   }, [open])
 
   const handleSend = async () => {
@@ -257,6 +292,10 @@ export default function ChatWidget({ branchSlug }) {
             role="dialog"
             aria-modal="true"
             aria-label={t(COPY.title)}
+            style={{
+              '--chat-kb': `${kbOffset}px`,
+              '--chat-kb-max': kbMaxHeight ? `${kbMaxHeight}px` : undefined,
+            }}
           >
             <div className="chat-sheet__head">
               <span className="chat-sheet__title">{t(COPY.title)}</span>

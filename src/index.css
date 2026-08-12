@@ -1297,12 +1297,14 @@ body.no-scroll {
 
 .chat-sheet {
   position: fixed;
-  bottom: 0;
+  bottom: var(--chat-kb, 0);
   left: 50%;
   z-index: 50;
   width: 100%;
   max-width: 480px;
-  max-height: 70dvh;
+  /* Con el teclado abierto, --chat-kb-max mide el área visible real (Visual
+     Viewport API) y la hoja no queda tapada ni se pasa de la pantalla. */
+  max-height: min(var(--chat-kb-max, 70dvh), 70dvh);
   display: flex;
   flex-direction: column;
   border-radius: 16px 16px 0 0;
