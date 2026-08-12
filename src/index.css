@@ -1299,13 +1299,16 @@ body.no-scroll {
   position: fixed;
   /* Drawer a pantalla completa. La altura sale de pinchar top (0) y bottom
      (--chat-kb, lo que tapa el teclado según el Visual Viewport): nunca crece
-     ni se pasa del área visible, no dependemos de dvh ni de cuánto achica el
-     browser el viewport con el teclado. */
+     ni se pasa del área visible. `max-height: 100dvh` agrega la capa dvh: en
+     browsers donde dvh reacciona al teclado/barra flotante, el límite baja solo
+     y el input sube automáticamente; donde no, lo cubre el valor JS de
+     --chat-kb. */
   top: 0;
   bottom: var(--chat-kb, 0);
   left: 0;
   z-index: 9999;
   width: 100%;
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   border-radius: 16px 16px 0 0;
@@ -1318,7 +1321,9 @@ body.no-scroll {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px 10px 16px;
+  /* `viewport-fit=cover` estira el drawer bajo la barra del sistema: sin este
+     padding-top el título y la X quedarían debajo del notch/status bar. */
+  padding: calc(10px + env(safe-area-inset-top)) 12px 10px 16px;
   border-bottom: 1px solid var(--card-border);
   border-radius: 16px 16px 0 0;
   background: var(--bg-secondary);
@@ -1404,9 +1409,14 @@ body.no-scroll {
 
 .chat-compose {
   flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
   display: flex;
   gap: 8px;
-  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  padding: 12px 16px;
+  /* Con viewport-fit=cover, el home indicator de iOS flota sobre el final de
+     la pantalla: este padding mantiene el input y el botón libres. */
+  padding-bottom: max(env(safe-area-inset-bottom, 16px), 12px);
   border-top: 1px solid var(--card-border);
 }
 
