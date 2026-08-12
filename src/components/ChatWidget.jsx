@@ -78,7 +78,6 @@ export default function ChatWidget({ branchSlug }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [kbOffset, setKbOffset] = useState(0)
-  const [kbMaxHeight, setKbMaxHeight] = useState(null)
   const endRef = useRef(null)
   const inputRef = useRef(null)
   const bubbleRef = useRef(null)
@@ -115,10 +114,10 @@ export default function ChatWidget({ branchSlug }) {
 
   /**
    * Teclado en pantalla: en el celular (sobre todo iOS) el teclado NO achica el
-   * layout viewport, así que la hoja con `bottom: 0` queda tapada por abajo.
-   * El Visual Viewport API sí mide el área realmente visible: con esos valores
-   * subimos la hoja (bottom) y recortamos su altura (max-height) para que el
-   * chat quede arriba del teclado, como un chat de mensajería.
+   * layout viewport, así que un drawer con `bottom: 0` queda tapado por abajo.
+   * El Visual Viewport API sí mide el área realmente visible: `kbOffset` es
+   * cuánto hay que subir la hoja (bottom) para que el input quede justo arriba
+   * del teclado, como en cualquier chat de mensajería.
    *
    * En Android moderno el browser ya achica el viewport al abrir el teclado,
    * así que la superposición calculada da 0 y no cambia nada.
@@ -126,23 +125,38 @@ export default function ChatWidget({ branchSlug }) {
   useEffect(() => {
     if (!open) return
     const vv = window.visualViewport
-    if (!vv) return
 
     const sync = () => {
-      const overlap = Math.max(0, window.innerHeight - (vv.offsetTop + vv.height))
+      const v = vv || { offsetTop: 0, height: window.innerHeight }
+      const overlap = Math.max(0, window.innerHeight - (v.offsetTop + v.height))
       setKbOffset(overlap)
-      setKbMaxHeight(vv.height)
     }
 
-    vv.addEventListener('resize', sync)
-    vv.addEventListener('scroll', sync)
+    if (vv) {
+      vv.addEventListener('resize', sync)
+      vv.addEventListener('scroll', sync)
+    }
     window.addEventListener('resize', sync)
+    // Algunos webviews no emiten eventos del visual viewport: el focus del
+    // input es el disparador real del teclado, así que también sincronizamos
+    // ahí, con un retry para agarrar la altura final del teclado.
+    window.addEventListener('focusin', sync)
+    window.addEventListener('focusout', sync)
     sync()
 
+    const retry = setInterval(sync, 250)
+    const stop = setTimeout(() => clearInterval(retry), 3000)
+
     return () => {
-      vv.removeEventListener('resize', sync)
-      vv.removeEventListener('scroll', sync)
+      if (vv) {
+        vv.removeEventListener('resize', sync)
+        vv.removeEventListener('scroll', sync)
+      }
       window.removeEventListener('resize', sync)
+      window.removeEventListener('focusin', sync)
+      window.removeEventListener('focusout', sync)
+      clearInterval(retry)
+      clearTimeout(stop)
     }
   }, [open])
 
@@ -306,10 +320,7 @@ export default function ChatWidget({ branchSlug }) {
             role="dialog"
             aria-modal="true"
             aria-label={t(COPY.title)}
-            style={{
-              '--chat-kb': `${kbOffset}px`,
-              '--chat-kb-max': kbMaxHeight ? `${kbMaxHeight}px` : undefined,
-            }}
+            style={{ '--chat-kb': `${kbOffset}px` }}
           >
             <div className="chat-sheet__head">
               <span className="chat-sheet__title">{t(COPY.title)}</span>
